@@ -1522,7 +1522,7 @@ object Form3: TForm3
     Top = 8
     Width = 35
     Height = 20
-    Caption = '1.1.0'
+    Caption = '1.2.0'
     Font.Charset = ANSI_CHARSET
     Font.Color = clWindowText
     Font.Height = -16

@@ -575,9 +575,16 @@ void TForm1::SelPoint(int X,int Y){
 	}else if(X >= p_data[lines][2] - data.width - small_pen && Y >= p_data[lines][3] - data.height - small_pen && X <= p_data[lines][2]+data.width-small_pen+1 && Y<= p_data[lines][3]+data.height-small_pen+1){
 		click_data[0] = lines;
 		click_data[1] = 3;
-		if(PenMode == 1 || PenMode == 3){    //終點移動
+		if(PenMode == 3){    //終點移動
 			ReDraw(lines,3);
 			MovePoint_flag = true;
+		}else if(PenMode == 1){
+			p_data[lines][6] = p_data[lines][2];
+			p_data[lines][7] = p_data[lines][3];
+			bmp->Assign(bmp_back);
+			DrawLine(lines);
+			ShowPoint(0,0);
+			Image1->Picture->Bitmap = bmp;
 		}else if(PenMode == 2){     //終點刪除
 			if (lines>1) {
 				for(int j=0;j<8;j++)     //清除資料
