@@ -28,15 +28,27 @@ __published:	// IDE-managed Components
 	void __fastcall Image1MouseUp(TObject *Sender, TMouseButton Button, TShiftState Shift,
           int X, int Y);
 	void __fastcall Image1MouseDown(TObject *Sender, TMouseButton Button, TShiftState Shift,
-          int X, int Y);
+		  int X, int Y);
 	void __fastcall Button1Click(TObject *Sender);
-
+	void __fastcall Button2Click(TObject *Sender);
+void __fastcall pointsMouseDown(TObject *Sender, TMouseButton Button, TShiftState Shift,
+		  int X, int Y);
 
 private:	// User declarations
 public:		// User declarations
 	__fastcall TForm1(TComponent* Owner);
-	void TForm1::Clear();
+	void Clear();
 	Graphics::TBitmap *bmp,*bmp_back;     //建立一個新的bitmap
+
+	struct point_data
+	{
+		int num_point;
+		float width;
+		float height;
+		TColor brush_color;
+		TColor pen_color;
+		float pen_size;
+	}data;
 };
 //---------------------------------------------------------------------------
 extern PACKAGE TForm1 *Form1;
