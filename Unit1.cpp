@@ -10,13 +10,6 @@
 #pragma package(smart_init)
 #pragma resource "*.dfm"
 TForm1 *Form1;
-bool DrawFlag,PointEnd,Click_flag,MovePoint_flag,end_draw,key_flag,Revers_flag;
-//畫圖模式               第二次點  移動控制點模式
-unsigned int options,PenMode;
-//0起點 1終點 2 P點   0檢示模式  1移動控制點模式  2刪除控制點模式
-int p_data[100][8],lines,click_data[2]; //0 第幾條線 1 起點 終點 P點 是否重疊
-//0 1起點 2 3終點 4 5  p點
-
 //---------------------------------------------------------------------------
 __fastcall TForm1::TForm1(TComponent* Owner)
 	: TForm(Owner)
@@ -114,6 +107,11 @@ void __fastcall TForm1::Panel3Click(TObject *Sender)
 void __fastcall TForm1::Image1MouseMove(TObject *Sender, TShiftState Shift, int X,
 		  int Y)
 {
+	int tmp_x,tmp_y;
+   //	double m1,ata1,m1_x,m1_y,sin1,cos1;
+
+	StatusBar1->Panels->Items[3]->Text = FloatToStr(X);
+	StatusBar1->Panels->Items[4]->Text = FloatToStr(Y);
 	if(DrawFlag == true){        //畫控制點模式
 		if(options == 0){
 			p_data[lines][2] = X;
@@ -135,14 +133,23 @@ void __fastcall TForm1::Image1MouseMove(TObject *Sender, TShiftState Shift, int 
 	}
 	if(MovePoint_flag == true){      //移動控制點
 		//0 第幾條線 1點的狀態 (0重疊線 1 P_1點 ,2起點3終點 5 P_2點)
-		int tmp_x,tmp_y,tmp_px,tmp_py,tmp_2px,tmp_2py;
 		tmp_x = X - p_data[click_data[0]][2];
 		tmp_y = Y - p_data[click_data[0]][3];
-		tmp_px = X - p_data[click_data[0]][4];
-		tmp_py = Y - p_data[click_data[0]][5];
-		tmp_2px = X - p_data[click_data[0]][6];
-		tmp_2py = Y - p_data[click_data[0]][7];
 
+	   /*	m1_x = p_data[click_data[0]][2] - X;  //相對座標長度
+		m1_y = p_data[click_data[0]][3] - Y;
+
+		if(m1_x == 0){ //垂直
+			StatusBar1->Panels->Items[0]->Text = "垂直";
+		}else if(m1_y == 0){  //水平
+			StatusBar1->Panels->Items[0]->Text = "水平";
+		}else{      //傾斜
+			m1 = m1_y /m1_x;      //斜率
+			ata1 = atan(m1);      //求弳度
+			StatusBar1->Panels->Items[0]->Text = FloatToStr((ata1*180)/3.1415926);
+			sin1 = sin(ata1);
+			cos1 = cos(ata1);
+		}                           */
 		if(click_data[1] == 0){
 			p_data[click_data[0]][2] = X;
 			p_data[click_data[0]][3] = Y;
@@ -159,8 +166,9 @@ void __fastcall TForm1::Image1MouseMove(TObject *Sender, TShiftState Shift, int 
 		}else if(click_data[1] == 1){
 			p_data[click_data[0]][4] = X;
 			p_data[click_data[0]][5] = Y;
-			p_data[click_data[0]][6] -=tmp_px;
-			p_data[click_data[0]][7] -=tmp_py;
+
+		   //	p_data[click_data[0]][6] = len1*cos1;
+		   //	p_data[click_data[0]][7] = len1*sin1;
 			bmp->Assign(bmp_back);
 			DrawLine(click_data[0]);
 			if(click_data[0]!=lines)
@@ -201,14 +209,19 @@ void __fastcall TForm1::Image1MouseMove(TObject *Sender, TShiftState Shift, int 
 		}else if(click_data[1] == 5){
 			p_data[click_data[0]][6] = X;
 			p_data[click_data[0]][7] = Y;
-			p_data[click_data[0]][4] -=tmp_2px;
-			p_data[click_data[0]][5] -=tmp_2py;
+			if(Sync_flag == false){
+				len1 = sqrt( (p_data[click_data[0]][4] - p_data[click_data[0]][2])*(p_data[click_data[0]][4] - p_data[click_data[0]][2]) + (p_data[click_data[0]][5] - p_data[click_data[0]][3])*(p_data[click_data[0]][5] - p_data[click_data[0]][3])           );
+                Sync_flag = true;
+			}
+			StatusBar1->Panels->Items[1]->Text = FloatToStr(len1);
+			//p_data[click_data[0]][4] = len1 * cos1;
+			//p_data[click_data[0]][5] = len1 * sin1;
 			bmp->Assign(bmp_back);
 			DrawLine(click_data[0]);
 			if(click_data[0]!=lines){
 				DrawLine(click_data[0]+1);
 			}
-				ShowPoint(1,click_data[0]);
+			ShowPoint(1,click_data[0]);
 			Image1->Picture->Bitmap = bmp;
 		}
 	}
@@ -220,28 +233,31 @@ void TForm1::ShowPoint(int mode,int line){
 			if(PenMode == 1){
 				SaveDraw();
 				for(int i=1;i<=lines;i++) //顯示P點
-				for(int j=0;j<8;j+=2)
+				for(int j=6;j>=0;j-=2)
 						DrawPoint(i,j);
-						Image1->Picture->Bitmap = bmp;
+					   //	Image1->Picture->Bitmap = bmp;
 			}else if(PenMode == 2){
 				SaveDraw();
 				for(int i=1;i<=lines;i++) //不顯示P點
-					for(int j=0;j<4;j+=2)
+					for(int j=2;j>=0;j-=2)
 						DrawPoint(i,j);
-						Image1->Picture->Bitmap = bmp;
+					   //	Image1->Picture->Bitmap = bmp;
 			}else if(PenMode == 0){    //不顯示點
 				SaveDraw();
 				Image1->Picture->Bitmap = bmp;
 			}else if(PenMode == 3){
 				SaveDraw();
 				for(int i=1;i<=lines;i++) //顯示P點
-					for(int j=0;j<8;j+=2)
+					for(int j=6;j>=0;j-=2)
 						DrawPoint(i,j);
-				Image1->Picture->Bitmap = bmp;
+			   //	Image1->Picture->Bitmap = bmp;
 			}
+		}else if(Click_flag == false && DrawFlag == true && PointEnd == false){
+			SaveDraw();
+			DrawPoint(lines,0);
 		}else{            //顯示一個點
 			DrawPoint(1,0);
-			Image1->Picture->Bitmap = bmp;
+		  //	Image1->Picture->Bitmap = bmp;
 		}
 	}else if(mode == 1){   //重點
 		DrawPoint(line-1,6);
@@ -466,6 +482,7 @@ void TForm1::DrawLine(int line){
 //---------------------------------------------------------------------------
 
 void TForm1::SelPoint(int X,int Y){
+	Sync_flag = false;
 	Revers_flag = false;
 	if(lines >= 99){
 		ShowMessage("你畫的線太多了，請先完成目前的繪圖");
@@ -648,37 +665,7 @@ void __fastcall TForm1::Image1MouseUp(TObject *Sender, TMouseButton Button, TShi
 			SaveDraw();
 			MovePoint_flag = false;
 		}
-		if(PenMode == 1){
-			bmp->Assign(bmp_new);//清空
-			SaveDraw();
-			for(int i=1;i<=lines;i++)  //顯示P點
-			for(int j=0;j<8;j+=2)
-				DrawPoint(i,j);
-		}else if(PenMode == 2){
-			if(PointEnd == true && Click_flag == true){
-				bmp_back->Assign(bmp_new);        //記錄點陣圖
-				bmp->Assign(bmp_new);
-				DrawPoint(1,0);         //顯示控制點
-				for(int j=2;j<8;j++)
-				p_data[1][j] = NULL;
-				N14->Enabled = false;
-			}else{
-				bmp->Assign(bmp_new);//清空
-				SaveDraw();
-
-				for(int i=1;i<=lines;i++) //不顯示P點
-				for(int j=0;j<4;j+=2)
-					DrawPoint(i,j);
-				}
-		}else if(PenMode == 0){
-		   SaveDraw();
-		}else if(PenMode == 3){
-			bmp->Assign(bmp_new);//清空
-			SaveDraw();
-			for(int i=1;i<=lines;i++)  //顯示P點
-			for(int j=0;j<8;j+=2)
-				DrawPoint(i,j);
-		}
+		ShowPoint(0,0);
 		Image1->Picture->Bitmap = bmp;
 	}
 }
@@ -717,12 +704,11 @@ void __fastcall TForm1::Image1MouseDown(TObject *Sender, TMouseButton Button, TS
 				p_data[lines][7] = Y;
 				bmp->Assign(bmp_back);
 				DrawLine(lines);
-				for(int i=0;i<8;i+=2)
-				DrawPoint(lines,i);
-				Image1->Picture->Bitmap = bmp;
 				options = 1;
 				DrawFlag = true;
 				PointEnd = false;
+				ShowPoint(3,lines);
+				Image1->Picture->Bitmap = bmp;
 			}
 		}else{                  //控制點模式
 			if(PenMode == 1 || PenMode ==2 || PenMode ==3){
@@ -732,23 +718,7 @@ void __fastcall TForm1::Image1MouseDown(TObject *Sender, TMouseButton Button, TS
 			}
 		}
 	}else if(Button==mbRight && (PenMode == 0 || PenMode == 1 || PenMode == 2)){
-		if(!(lines <= 1 || PointEnd == true)){
-		for(int i=0;i<8;i++)
-		 p_data[lines][i] = NULL;
-			 lines --;
-			 if(end_draw == true){
-				end_draw = false;
-		 }
-		 ShowPoint(0,0);
-		}else if(lines == 1){
-			bmp_back->Assign(bmp_new);        //記錄點陣圖
-			bmp->Assign(bmp_new);
-			DrawPoint(1,0);         //顯示控制點
-			Image1->Picture->Bitmap = bmp;  //顯示結果
-			Click_flag = true; //已設置起點
-			PointEnd = true;
-			N14->Enabled = false;
-		 }
+		N14Click(Sender);
 	}
 }
 //---------------------------------------------------------------------------
@@ -766,12 +736,11 @@ void TForm1::LinkPoint(int X,int Y){
 			p_data[lines][6] = X;      //P點等於終點
 			p_data[lines][7] = Y;
 			DrawLine(lines);
-			for(int i=0;i<8;i+=2)
-			DrawPoint(lines,i);
-			Image1->Picture->Bitmap = bmp;
 			options = 1;
 			DrawFlag = true;
 			PointEnd = false;
+			ShowPoint(3,lines);
+			Image1->Picture->Bitmap = bmp;
 		}
 }
 //---------------------------------------------------------------------------
@@ -844,6 +813,7 @@ void __fastcall TForm1::N4Click(TObject *Sender)
 {
 line_data.pen_size = 5;
 ShowPoint(0,0);
+  Image1->Picture->Bitmap = bmp;  //顯示結果
 }
 //---------------------------------------------------------------------------
 
@@ -851,6 +821,7 @@ void __fastcall TForm1::N5Click(TObject *Sender)
 {
 line_data.pen_size = 3;
 ShowPoint(0,0);
+  Image1->Picture->Bitmap = bmp;  //顯示結果
 }
 //---------------------------------------------------------------------------
 
@@ -858,6 +829,7 @@ void __fastcall TForm1::N6Click(TObject *Sender)
 {
 line_data.pen_size = 1.5;
 ShowPoint(0,0);
+  Image1->Picture->Bitmap = bmp;  //顯示結果
 }
 //---------------------------------------------------------------------------
 void __fastcall TForm1::N8Click(TObject *Sender)
@@ -865,6 +837,8 @@ void __fastcall TForm1::N8Click(TObject *Sender)
 line_data.pen_color = clBlack;
 Panel2->Color =  line_data.pen_color;
 ShowPoint(0,0);
+  Image1->Picture->Bitmap = bmp;  //顯示結果
+    Image1->Picture->Bitmap = bmp;  //顯示結果
 }
 //---------------------------------------------------------------------------
 void __fastcall TForm1::N9Click(TObject *Sender)
@@ -873,6 +847,8 @@ line_data.pen_color = clRed;
 Panel2->Color =  line_data.pen_color;
 SaveDraw();
 ShowPoint(0,0);
+Image1->Picture->Bitmap = bmp;  //顯示結果
+  Image1->Picture->Bitmap = bmp;  //顯示結果
 }
 //---------------------------------------------------------------------------
 void __fastcall TForm1::N10Click(TObject *Sender)
@@ -881,11 +857,12 @@ line_data.pen_color = clBlue;
 Panel2->Color =  line_data.pen_color;
 SaveDraw();
 ShowPoint(0,0);
+  Image1->Picture->Bitmap = bmp;  //顯示結果
 }
 //---------------------------------------------------------------------------
 void __fastcall TForm1::N12Click(TObject *Sender)
 {
-  Close();
+  Close();   //關閉程式
 }
 //---------------------------------------------------------------------------
 void __fastcall TForm1::N14Click(TObject *Sender)
@@ -899,6 +876,7 @@ if(!(lines <= 1 || PointEnd == true)){
 	end_draw = false;
   }
   ShowPoint(0,0);
+  Image1->Picture->Bitmap = bmp;  //顯示結果
   }else if(lines == 1){
 			bmp_back->Assign(bmp_new);        //記錄點陣圖
 			bmp->Assign(bmp_new);
@@ -912,8 +890,6 @@ if(!(lines <= 1 || PointEnd == true)){
   }
 }
 //---------------------------------------------------------------------------
-
-
  //放棄目前繪圖
 
 void __fastcall TForm1::N15Click(TObject *Sender)
@@ -934,36 +910,12 @@ void __fastcall TForm1::N15Click(TObject *Sender)
 	}
 }
 //---------------------------------------------------------------------------
-
-
-void __fastcall TForm1::N17Click(TObject *Sender)
-{
-	PenMode = 0;
-	SpeedButton1->Down = true;
-	ShowPoint(0,0);
-}
-//---------------------------------------------------------------------------
-
-void __fastcall TForm1::N18Click(TObject *Sender)
-{
-	PenMode = 1;
-	SpeedButton2->Down = true;
-	ShowPoint(0,0);
-}
-//---------------------------------------------------------------------------
-
-void __fastcall TForm1::N19Click(TObject *Sender)
-{
-	PenMode = 2;
-	SpeedButton3->Down = true;
-	ShowPoint(0,0);
-}
-//---------------------------------------------------------------------------
-
 void __fastcall TForm1::SpeedButton1Click(TObject *Sender)
 {
 	PenMode = 0;
 	ShowPoint(0,0);
+	Image1->Picture->Bitmap = bmp;
+	SpeedButton1->Down = true;
 }
 //---------------------------------------------------------------------------
 
@@ -971,6 +923,8 @@ void __fastcall TForm1::SpeedButton2Click(TObject *Sender)
 {
 	PenMode = 1;
 	ShowPoint(0,0);
+	Image1->Picture->Bitmap = bmp;
+	SpeedButton2->Down = true;
 }
 //---------------------------------------------------------------------------
 
@@ -978,37 +932,16 @@ void __fastcall TForm1::SpeedButton3Click(TObject *Sender)
 {
 	PenMode = 2;
 	ShowPoint(0,0);
+	Image1->Picture->Bitmap = bmp;
+	SpeedButton3->Down = true;
 }
 //---------------------------------------------------------------------------
 void __fastcall TForm1::SpeedButton6Click(TObject *Sender)
 {
 	PenMode = 3;
 	ShowPoint(0,0);
-}
-//---------------------------------------------------------------------------
-
-void __fastcall TForm1::SpeedButton4Click(TObject *Sender)
-{
-	EndDraw();
-}
-//---------------------------------------------------------------------------
-
-void __fastcall TForm1::SpeedButton5Click(TObject *Sender)
-{
-	if(!(lines == 0)){
-		for(int i=0;i<100;i++)
-			for(int j=0;j<8;j++)
-				p_data[i][j] = NULL;
-		SaveDraw();
-		bmp_new->Assign(bmp);
-		Image1->Picture->Bitmap = bmp;
-		lines = 0;
-		PointEnd =true;      //結束控制點狀態
-		Click_flag = false;
-		DrawFlag = false;
-		end_draw = false;
-		N14->Enabled = false;
-	}
+	Image1->Picture->Bitmap = bmp;
+	SpeedButton6->Down = true;
 }
 //---------------------------------------------------------------------------
 
@@ -1022,5 +955,7 @@ void __fastcall TForm1::N22Click(TObject *Sender)
 {
 	Form3->ShowModal();
 }
+
 //---------------------------------------------------------------------------
+
 

@@ -17,6 +17,7 @@
 #include <Vcl.ActnColorMaps.hpp>
 #include <Vcl.ActnMan.hpp>
 #include <Vcl.ExtDlgs.hpp>
+#include <Vcl.ComCtrls.hpp>
 //---------------------------------------------------------------------------
 class TForm1 : public TForm
 {
@@ -57,6 +58,8 @@ __published:	// IDE-managed Components
 	TMenuItem *N22;
 	TPanel *Panel3;
 	TSpeedButton *SpeedButton6;
+	TStatusBar *StatusBar1;
+	TMenuItem *N23;
 	void __fastcall FormCreate(TObject *Sender);
 	void __fastcall Image1MouseMove(TObject *Sender, TShiftState Shift, int X, int Y);
 	void __fastcall Image1MouseUp(TObject *Sender, TMouseButton Button, TShiftState Shift,
@@ -77,14 +80,9 @@ __published:	// IDE-managed Components
 	void __fastcall N14Click(TObject *Sender);
 	void __fastcall Save1Click(TObject *Sender);
 	void __fastcall N15Click(TObject *Sender);
-	void __fastcall N17Click(TObject *Sender);
-	void __fastcall N18Click(TObject *Sender);
-	void __fastcall N19Click(TObject *Sender);
 	void __fastcall SpeedButton1Click(TObject *Sender);
 	void __fastcall SpeedButton2Click(TObject *Sender);
 	void __fastcall SpeedButton3Click(TObject *Sender);
-	void __fastcall SpeedButton4Click(TObject *Sender);
-	void __fastcall SpeedButton5Click(TObject *Sender);
 	void __fastcall Panel2Click(TObject *Sender);
 	void __fastcall N21Click(TObject *Sender);
 	void __fastcall N22Click(TObject *Sender);
@@ -108,6 +106,15 @@ public:		// User declarations
 	void LinkPoint(int,int);
 	void SaveImage(Graphics::TBitmap *,AnsiString);
 	AnsiString AppPath,PicPath;
+
+	bool DrawFlag,PointEnd,Click_flag,MovePoint_flag,end_draw,key_flag,Revers_flag,Sync_flag;
+	//畫圖模式               第二次點  移動控制點模式                              暫時無用
+	unsigned int options,PenMode;
+	//0起點 1終點 2 P點   0檢示模式  1移動控制點模式  2刪除控制點模式
+	int p_data[100][8],lines,click_data[2]; //0 第幾條線 1 起點 終點 P點 是否重疊
+	//0 1起點 2 3終點 4 5  p點
+	double len1;     //暫時無用
+
 	struct point_data
 	{
 		int num_point;

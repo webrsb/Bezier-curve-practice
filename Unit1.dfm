@@ -22,19 +22,20 @@ object Form1: TForm1
     Left = 33
     Top = 0
     Width = 627
-    Height = 449
+    Height = 430
     Cursor = crArrow
     Align = alClient
     OnMouseDown = Image1MouseDown
     OnMouseMove = Image1MouseMove
     OnMouseUp = Image1MouseUp
     ExplicitTop = 8
+    ExplicitHeight = 449
   end
   object Panel1: TPanel
     Left = 0
     Top = 0
     Width = 33
-    Height = 449
+    Height = 430
     Align = alLeft
     Color = clWhite
     ParentBackground = False
@@ -282,7 +283,7 @@ object Form1: TForm1
       ParentShowHint = False
       ShowHint = True
       Transparent = False
-      OnClick = SpeedButton4Click
+      OnClick = N3Click
     end
     object SpeedButton5: TSpeedButton
       Left = 4
@@ -341,7 +342,7 @@ object Form1: TForm1
       ParentShowHint = False
       ShowHint = True
       Transparent = False
-      OnClick = SpeedButton5Click
+      OnClick = N15Click
     end
     object SpeedButton6: TSpeedButton
       Left = 4
@@ -429,6 +430,35 @@ object Form1: TForm1
       OnClick = Panel2Click
     end
   end
+  object StatusBar1: TStatusBar
+    Left = 0
+    Top = 430
+    Width = 660
+    Height = 19
+    Panels = <
+      item
+        Width = 80
+      end
+      item
+        Width = 80
+      end
+      item
+        Width = 80
+      end
+      item
+        Width = 80
+      end
+      item
+        Width = 80
+      end
+      item
+        Width = 80
+      end
+      item
+        Width = 80
+      end>
+    Visible = False
+  end
   object MainMenu1: TMainMenu
     AutoHotkeys = maManual
     Left = 424
@@ -502,15 +532,19 @@ object Form1: TForm1
       Caption = #24037#20855
       object N17: TMenuItem
         Caption = #27298#35222#24037#20855
-        OnClick = N17Click
+        OnClick = SpeedButton1Click
+      end
+      object N23: TMenuItem
+        Caption = #27161#28310#37628#26412#24037#20855
+        OnClick = SpeedButton2Click
       end
       object N18: TMenuItem
         Caption = #31227#21205#37672#40670#24037#20855
-        OnClick = N18Click
+        OnClick = SpeedButton6Click
       end
       object N19: TMenuItem
         Caption = #21034#38500#37672#40670#24037#20855
-        OnClick = N19Click
+        OnClick = SpeedButton3Click
       end
     end
     object N20: TMenuItem

@@ -19,7 +19,6 @@ __published:	// IDE-managed Components
 	TLabel *Label6;
 	TLabel *Label7;
 	TLabel *Label8;
-	TLabel *Label9;
 	TLabel *Label10;
 	TLabel *Label11;
 	TLabel *Label12;
@@ -29,6 +28,8 @@ __published:	// IDE-managed Components
 	TLabel *Label16;
 	TLabel *Label17;
 	TLabel *Label18;
+	TLabel *Label9;
+	TLabel *Label19;
 private:	// User declarations
 public:		// User declarations
 	__fastcall TForm2(TComponent* Owner);
