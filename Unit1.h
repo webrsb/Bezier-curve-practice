@@ -23,22 +23,31 @@ __published:	// IDE-managed Components
 	TButton *Button4;
 	TButton *Button5;
 	TButton *Button6;
+	TLabel *Label5;
+	TLabel *Label6;
+	TLabel *Label7;
+	TLabel *Label8;
+	TLabel *Label9;
+	TLabel *Label10;
+	TLabel *Label11;
+	TLabel *Label12;
 	void __fastcall FormCreate(TObject *Sender);
 	void __fastcall Image1MouseMove(TObject *Sender, TShiftState Shift, int X, int Y);
 	void __fastcall Image1MouseUp(TObject *Sender, TMouseButton Button, TShiftState Shift,
           int X, int Y);
 	void __fastcall Image1MouseDown(TObject *Sender, TMouseButton Button, TShiftState Shift,
-		  int X, int Y);
+          int X, int Y);
 	void __fastcall Button1Click(TObject *Sender);
-	void __fastcall Button2Click(TObject *Sender);
-void __fastcall pointsMouseDown(TObject *Sender, TMouseButton Button, TShiftState Shift,
-		  int X, int Y);
+
 
 private:	// User declarations
 public:		// User declarations
 	__fastcall TForm1(TComponent* Owner);
-	void Clear();
+	void TForm1::Clear();
 	Graphics::TBitmap *bmp,*bmp_back;     //建立一個新的bitmap
+	void DrawPoint(int,int);
+	void DrawLine(int,int,int,int);
+	void MovePoint(int,int);
 
 	struct point_data
 	{

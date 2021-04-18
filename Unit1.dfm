@@ -24,8 +24,7 @@ object Form1: TForm1
     OnMouseDown = Image1MouseDown
     OnMouseMove = Image1MouseMove
     OnMouseUp = Image1MouseUp
-    ExplicitLeft = 96
-    ExplicitTop = 112
+    ExplicitLeft = 8
   end
   object Label1: TLabel
     Left = 16
@@ -79,6 +78,110 @@ object Form1: TForm1
     Font.Style = []
     ParentFont = False
   end
+  object Label5: TLabel
+    Left = 16
+    Top = 387
+    Width = 22
+    Height = 19
+    Caption = 'X0:'
+    Font.Charset = ANSI_CHARSET
+    Font.Color = clWindowText
+    Font.Height = -15
+    Font.Name = #24494#36575#27491#40657#39636
+    Font.Style = []
+    ParentFont = False
+  end
+  object Label6: TLabel
+    Left = 44
+    Top = 387
+    Width = 9
+    Height = 19
+    Caption = '0'
+    Font.Charset = ANSI_CHARSET
+    Font.Color = clWindowText
+    Font.Height = -15
+    Font.Name = #24494#36575#27491#40657#39636
+    Font.Style = []
+    ParentFont = False
+  end
+  object Label7: TLabel
+    Left = 142
+    Top = 387
+    Width = 21
+    Height = 19
+    Caption = 'Y0:'
+    Font.Charset = ANSI_CHARSET
+    Font.Color = clWindowText
+    Font.Height = -15
+    Font.Name = #24494#36575#27491#40657#39636
+    Font.Style = []
+    ParentFont = False
+  end
+  object Label8: TLabel
+    Left = 169
+    Top = 387
+    Width = 9
+    Height = 19
+    Caption = '0'
+    Font.Charset = ANSI_CHARSET
+    Font.Color = clWindowText
+    Font.Height = -15
+    Font.Name = #24494#36575#27491#40657#39636
+    Font.Style = []
+    ParentFont = False
+  end
+  object Label9: TLabel
+    Left = 16
+    Top = 362
+    Width = 9
+    Height = 19
+    Caption = '0'
+    Font.Charset = ANSI_CHARSET
+    Font.Color = clWindowText
+    Font.Height = -15
+    Font.Name = #24494#36575#27491#40657#39636
+    Font.Style = []
+    ParentFont = False
+  end
+  object Label10: TLabel
+    Left = 67
+    Top = 362
+    Width = 9
+    Height = 19
+    Caption = '0'
+    Font.Charset = ANSI_CHARSET
+    Font.Color = clWindowText
+    Font.Height = -15
+    Font.Name = #24494#36575#27491#40657#39636
+    Font.Style = []
+    ParentFont = False
+  end
+  object Label11: TLabel
+    Left = 122
+    Top = 362
+    Width = 9
+    Height = 19
+    Caption = '0'
+    Font.Charset = ANSI_CHARSET
+    Font.Color = clWindowText
+    Font.Height = -15
+    Font.Name = #24494#36575#27491#40657#39636
+    Font.Style = []
+    ParentFont = False
+  end
+  object Label12: TLabel
+    Left = 169
+    Top = 362
+    Width = 9
+    Height = 19
+    Caption = '0'
+    Font.Charset = ANSI_CHARSET
+    Font.Color = clWindowText
+    Font.Height = -15
+    Font.Name = #24494#36575#27491#40657#39636
+    Font.Style = []
+    ParentFont = False
+  end
   object Button1: TButton
     Left = 312
     Top = 406
@@ -93,9 +196,8 @@ object Form1: TForm1
     Top = 406
     Width = 75
     Height = 25
-    Caption = #30059#25511#21046#40670
+    Caption = #30059#32218
     TabOrder = 1
-    OnClick = Button2Click
   end
   object Button3: TButton
     Left = 458
