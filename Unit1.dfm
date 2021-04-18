@@ -198,8 +198,8 @@ object Form1: TForm1
     ParentFont = False
   end
   object Button1: TButton
-    Left = 312
-    Top = 406
+    Left = 393
+    Top = 375
     Width = 75
     Height = 25
     Caption = #28165#38500#30059#24067
@@ -216,11 +216,11 @@ object Form1: TForm1
     OnClick = Button2Click
   end
   object Button4: TButton
-    Left = 567
-    Top = 335
+    Left = 575
+    Top = 375
     Width = 75
     Height = 25
-    Caption = #31532#19968#26781#32218
+    Caption = #35264#30475
     TabOrder = 2
     OnClick = Button4Click
   end
@@ -234,20 +234,21 @@ object Form1: TForm1
     OnClick = Button5Click
   end
   object Button6: TButton
-    Left = 567
-    Top = 366
+    Left = 583
+    Top = 406
     Width = 75
     Height = 25
-    Caption = #31532#20108#26781#32218
+    Caption = #39023#31034'bitmap_new'
     TabOrder = 4
     OnClick = Button6Click
   end
   object Button3: TButton
-    Left = 458
-    Top = 335
+    Left = 474
+    Top = 375
     Width = 95
     Height = 25
-    Caption = #20462#25913#32218#27573
+    Caption = #23436#25104#32362#22294
     TabOrder = 5
+    OnClick = Button3Click
   end
 end

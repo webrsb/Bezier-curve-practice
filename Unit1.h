@@ -44,6 +44,7 @@ __published:	// IDE-managed Components
 	void __fastcall Button4Click(TObject *Sender);
 	void __fastcall Button6Click(TObject *Sender);
 	void __fastcall Button5Click(TObject *Sender);
+	void __fastcall Button3Click(TObject *Sender);
 
 
 private:	// User declarations
@@ -51,10 +52,13 @@ public:		// User declarations
 	__fastcall TForm1(TComponent* Owner);
 	void TForm1::Clear();
 	Graphics::TBitmap *bmp,*bmp_back,*bmp_new;     //建立一個新的bitmap
-	void DrawPoint(int);
+	void DrawPoint(int,int);
 	void DrawLine(int);
+	void DrawLine_double(int);
 	void MovePoint(int,int);
-	void ReDraw(int);
+	void ReDraw(int,int);
+	void SaveDraw();
+	void EndDraw();
 
 	struct point_data
 	{
