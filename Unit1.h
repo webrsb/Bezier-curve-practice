@@ -18,6 +18,7 @@
 #include <Vcl.ActnMan.hpp>
 #include <Vcl.ExtDlgs.hpp>
 #include <Vcl.ComCtrls.hpp>
+#include <Vcl.Graphics.hpp>
 //---------------------------------------------------------------------------
 class TForm1 : public TForm
 {
@@ -62,6 +63,10 @@ __published:	// IDE-managed Components
 	TMenuItem *N23;
 	TSpeedButton *SpeedButton7;
 	TPanel *Panel4;
+	TPanel *Panel5;
+	TCheckBox *CheckBox1;
+	TRadioButton *RadioButton1;
+	TRadioButton *RadioButton2;
 	void __fastcall FormCreate(TObject *Sender);
 	void __fastcall Image1MouseMove(TObject *Sender, TShiftState Shift, int X, int Y);
 	void __fastcall Image1MouseUp(TObject *Sender, TMouseButton Button, TShiftState Shift,
@@ -92,12 +97,14 @@ __published:	// IDE-managed Components
 	void __fastcall SpeedButton6Click(TObject *Sender);
 	void __fastcall SpeedButton7Click(TObject *Sender);
 	void __fastcall Panel4Click(TObject *Sender);
+	void __fastcall SpeedButton7MouseDown(TObject *Sender, TMouseButton Button, TShiftState Shift,
+          int X, int Y);
 
 
 private:	// User declarations
 public:		// User declarations
 	__fastcall TForm1(TComponent* Owner);
-	void TForm1::Clear();
+	void Clear();
 	Graphics::TBitmap *bmp,*bmp_back,*bmp_new;     //建立一個新的bitmap
 	void DrawPoint(int,int);
 	void DrawLine(int);
@@ -113,7 +120,8 @@ public:		// User declarations
 	void FloodFill(Graphics::TBitmap *, Graphics::TBitmap *,
 					TColor,int,int);
 	void FloodFill_stack(int,int);
-
+	void FloodFill_queue(int,int);
+	void FloodFill_queue_plus(int,int);
 	AnsiString AppPath,PicPath;
 
 	bool DrawFlag,PointEnd,Click_flag,MovePoint_flag,end_draw,key_flag,Revers_flag,Sync_flag;

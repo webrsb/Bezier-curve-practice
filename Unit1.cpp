@@ -729,7 +729,14 @@ void __fastcall TForm1::Image1MouseDown(TObject *Sender, TMouseButton Button, TS
 				Image1->Picture->Bitmap = bmp;
 			}
 		}else if(PenMode == 4){
-		   FloodFill(bmp,bmp,stack_data.f_color,X,Y);
+			if(CheckBox1->Checked == true){
+				unsigned int Time1 = GetTickCount();
+				FloodFill(bmp,bmp,stack_data.f_color,X,Y);
+				unsigned int Time2 = GetTickCount();
+				ShowMessage(Time2 - Time1);
+			}else{
+				FloodFill(bmp,bmp,stack_data.f_color,X,Y);
+			}
 		}else{                  //控制點模式
 			if(PenMode == 1 || PenMode ==2 || PenMode ==3){
 				SelPoint(X,Y);
@@ -776,7 +783,6 @@ void TForm1::Clear(){
 	bmp_back->Assign(bmp);
 	bmp_new->Assign(bmp);
 	Image1->Picture->Bitmap = bmp;
- 
 }
 void __fastcall TForm1::FormShortCut(TWMKey &Msg, bool &Handled)
 {
@@ -993,44 +999,6 @@ void TForm1::GetRGB(Graphics::TBitmap *Bmp, int X, int Y, int *r, int *g, int *b
 
 }
 
-void TForm1::FloodFill_stack(int Inx,int Iny){
-	int cR,cG,cB;
-	int pR,pG,pB;
-	int oR,oG,oB;
-	int width,height;
-	Graphics::TBitmap *Target;
-	Byte *tptr;
-	int col;
-	//在範圍內
-	width = stack_data.width;
-	height = stack_data.height;
-	if(Inx<0 ||Inx>=width || Iny<0 || Iny>=height){
-		return;
-	}
-	col=Inx*3;
-	Target = stack_data.Target;
-	tptr=(Byte *)Target->ScanLine[Iny];
-
-	cR = stack_data.cR;
-	cG = stack_data.cG;
-	cB = stack_data.cB;
-	pR = stack_data.pR;
-	pG = stack_data.pG;
-	pB = stack_data.pB;
-	oR = tptr[col+2];  //暫存RGB
-	oG = tptr[col+1];
-	oB = tptr[col];
-	if(oR != cR || oG != cG || oB != cB){
-		return;
-	}
-	tptr[col+2] = pR;
-	tptr[col+1] = pG;
-	tptr[col]   = pB;
-	FloodFill_stack(Inx,Iny-1);
-	FloodFill_stack(Inx,Iny+1);
-	FloodFill_stack(Inx-1,Iny);
-	FloodFill_stack(Inx+1,Iny);
-}
 void TForm1::FloodFill(Graphics::TBitmap *Source, Graphics::TBitmap *Target,TColor PColor,int Px,int Py)
 {
   Byte *tptr;
@@ -1053,9 +1021,179 @@ void TForm1::FloodFill(Graphics::TBitmap *Source, Graphics::TBitmap *Target,TCol
   stack_data.pR = Pr;
   stack_data.pG = Pg;
   stack_data.pB = Pb;
-  FloodFill_stack(Px,Py);
+  if(RadioButton1->Checked == true)
+	FloodFill_stack(Px,Py);
+  else if(RadioButton2->Checked == true)
+	FloodFill_queue_plus(Px,Py);
 }
+//---------------------------------------------------------------------------
+void TForm1::FloodFill_stack(int Inx,int Iny){
+	int col;
+	Byte *tptr,*oR,*oG,*oB;
+	//在範圍內
+	if(Inx<0 ||Inx>=stack_data.width || Iny<0 || Iny>=stack_data.height)
+		return;
+  //Image1->Picture->Bitmap = bmp;
+  //Delay(0);
+	col=(Inx<<1)+Inx;
+	tptr=(Byte *)stack_data.Target->ScanLine[Iny];
+	oR = &tptr[col+2];  //暫存RGB
+	oG = &tptr[col+1];
+	oB = &tptr[col];
+	if(*oR != stack_data.cR || *oG != stack_data.cG || *oB != stack_data.cB)
+		return;
+	*oR = stack_data.pR;
+	*oG = stack_data.pG;
+	*oB = stack_data.pB;
+	FloodFill_stack(Inx-1,Iny);
+	FloodFill_stack(Inx,Iny-1);
+	FloodFill_stack(Inx+1,Iny);
+	FloodFill_stack(Inx,Iny+1);
+}
+//---------------------------------------------------------------------------
+void TForm1::FloodFill_queue(int Inx,int Iny){
+	int q[10000000][2],nx,ny,index;
+	int col;
+	Byte *tptr,*oR,*oG,*oB;
+	q[0][0] = Inx;
+	q[0][1] = Iny;
+	index = 1;
+	do{
+		index --;
+		nx = q[index][0];
+		ny = q[index][1];
+		if(nx<0 ||nx>=stack_data.width || ny<0 || ny>=stack_data.height)
+			continue;
+		col=(nx<<1)+nx;
+		tptr=(Byte *)stack_data.Target->ScanLine[ny];
+		oR = &tptr[col+2];  //暫存RGB
+		oG = &tptr[col+1];
+		oB = &tptr[col];
+		if(*oR != stack_data.cR || *oG != stack_data.cG || *oB != stack_data.cB)
+			continue;
+		*oR = stack_data.pR;
+		*oG = stack_data.pG;
+		*oB = stack_data.pB;
+		q[index][0] = nx-1;
+		q[index][1] = ny;
+		index ++;
+		q[index][0] = nx+1;
+		q[index][1] = ny;
+		index ++;
+		q[index][0] = nx;
+		q[index][1] = ny-1;
+		index ++;
+		q[index][0] = nx;
+		q[index][1] = ny+1;
+		index ++;
+	}while(index>0);
+}
+//---------------------------------------------------------------------------
+void TForm1::FloodFill_queue_plus(int Inx,int Iny){
+	int **q,num_t,nx,ny,index,col;
+	Byte *tptr,*oR,*oG,*oB;
+	num_t = stack_data.width * stack_data.height*3 ;
+	q = new int*[num_t];
+	for(int i=0; i<num_t; i++)
+		q[i] = new int[3];
+	q[0][0] = Inx;
+	q[0][1] = Iny;
+	q[0][2] = 4;
+	index = 1;
+	do{
+		index --;
+		nx = q[index][0];
+		ny = q[index][1];
+		if(nx<0 ||nx>=stack_data.width || ny<0 || ny>=stack_data.height)
+			continue;
+		col=(nx<<1)+nx;
+		tptr=(Byte *)stack_data.Target->ScanLine[ny];
+		oR = &tptr[col+2];  //暫存RGB
+		oG = &tptr[col+1];
+		oB = &tptr[col];
+		if(*oR != stack_data.cR || *oG != stack_data.cG || *oB != stack_data.cB)
+			continue;
+		*oR = stack_data.pR;
+		*oG = stack_data.pG;
+		*oB = stack_data.pB;
+		switch(q[index][2]){
+			case 0:
+				q[index][0] = nx-1;
+				q[index][1] = ny;
+				q[index][2] = 0;
+				index ++;
+				q[index][0] = nx;
+				q[index][1] = ny-1;
+				q[index][2] = 2;
+				index ++;
+				q[index][0] = nx;
+				q[index][1] = ny+1;
+				q[index][2] = 3;
+			break;
+			case 1:
+				q[index][0] = nx+1;
+				q[index][1] = ny;
+				q[index][2] = 1;
+				index ++;
+				q[index][0] = nx;
+				q[index][1] = ny-1;
+				q[index][2] = 2;
+				index ++;
+				q[index][0] = nx;
+				q[index][1] = ny+1;
+				q[index][2] = 3;
+			break;
+			case 2:
+				q[index][0] = nx-1;
+				q[index][1] = ny;
+				q[index][2] = 0;
+				index ++;
+				q[index][0] = nx+1;
+				q[index][1] = ny;
+				q[index][2] = 1;
+				index ++;
+				q[index][0] = nx;
+				q[index][1] = ny-1;
+				q[index][2] = 2;
+			break;
+			case 3:
+				q[index][0] = nx-1;
+				q[index][1] = ny;
+				q[index][2] = 0;
+				index ++;
+				q[index][0] = nx+1;
+				q[index][1] = ny;
+				q[index][2] = 1;
+				index ++;
+				q[index][0] = nx;
+				q[index][1] = ny+1;
+				q[index][2] = 3;
+			break;
+			default:
+				q[index][0] = nx-1;
+				q[index][1] = ny;
+				q[index][2] = 0;
+				index ++;
+				q[index][0] = nx+1;
+				q[index][1] = ny;
+				q[index][2] = 1;
+				index ++;
+				q[index][0] = nx;
+				q[index][1] = ny-1;
+				q[index][2] = 2;
+				index ++;
+				q[index][0] = nx;
+				q[index][1] = ny+1;
+				q[index][2] = 3;
+		}
 
+		index ++;
+	}while(index>0);
+		for(int i=num_t-1;i>=0;i--)
+		  delete q[i];
+		delete q;
+}
+//---------------------------------------------------------------------------
 void __fastcall TForm1::SpeedButton7Click(TObject *Sender)
 {
 	PenMode = 4;
@@ -1073,5 +1211,19 @@ void __fastcall TForm1::Panel4Click(TObject *Sender)
 		Panel4->Color = f_color;
 	}
 }
+void __fastcall TForm1::SpeedButton7MouseDown(TObject *Sender, TMouseButton Button,
+          TShiftState Shift, int X, int Y)
+{
+	if(Panel5->Visible == true)
+		Panel5->Visible = false;
+	else if(Shift.Contains(ssCtrl)){
+		if(Panel5->Visible == false)
+			Panel5->Visible = true;
+	}
+}
 //---------------------------------------------------------------------------
+
+
+
+
 

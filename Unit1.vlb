@@ -1,40 +1,56 @@
 ﻿[SpeedButton2]
-Coordinates=281,1,96,36
+Coordinates=376,0,96,36
 
 [SpeedButton1]
-Coordinates=281,56,96,36
+Coordinates=376,55,96,36
 
 [SpeedButton6]
-Coordinates=281,111,96,36
+Coordinates=376,110,96,36
 
 [Panel2]
 Coordinates=78,77,54,58
 
 [SpeedButton5]
-Coordinates=415,1,96,36
+Coordinates=510,0,96,36
 
 [Image1]
 Coordinates=19,77,57,58
 
 [SpeedButton3]
-Coordinates=415,111,96,36
+Coordinates=510,110,96,36
 
 [Panel1]
-Coordinates=97,1,54,58
+Coordinates=120,0,54,58
 
 [StatusBar1]
 Coordinates=0,0,78,58
 
 [SpeedButton4]
-Coordinates=549,56,96,36
+Coordinates=644,55,96,36
 
 [Panel3]
-Coordinates=189,1,54,58
+Coordinates=320,-10,54,58
 
 [SpeedButton7]
-Coordinates=549,111,96,36
+Coordinates=644,110,96,36
 
 [Panel4]
 Coordinates=160,80,54,58
 Visible=True
+
+[]
+Coordinates=143,173,53,58
+Visible=True
+
+[Panel5]
+Coordinates=212,1,54,58
+
+[RadioButton2]
+Coordinates=252,78,92,36
+
+[CheckBox1]
+Coordinates=304,165,114,58
+
+[RadioButton1]
+Coordinates=202,176,92,36
 
