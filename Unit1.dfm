@@ -184,6 +184,19 @@ object Form1: TForm1
     Font.Style = []
     ParentFont = False
   end
+  object Label13: TLabel
+    Left = 225
+    Top = 362
+    Width = 9
+    Height = 19
+    Caption = '0'
+    Font.Charset = ANSI_CHARSET
+    Font.Color = clWindowText
+    Font.Height = -15
+    Font.Name = #24494#36575#27491#40657#39636
+    Font.Style = []
+    ParentFont = False
+  end
   object Button1: TButton
     Left = 312
     Top = 406
@@ -198,40 +211,43 @@ object Form1: TForm1
     Top = 406
     Width = 75
     Height = 25
-    Caption = #30059#32218
+    Caption = #39023#31034'bitmap'
     TabOrder = 1
     OnClick = Button2Click
+  end
+  object Button4: TButton
+    Left = 567
+    Top = 335
+    Width = 75
+    Height = 25
+    Caption = #31532#19968#26781#32218
+    TabOrder = 2
+    OnClick = Button4Click
+  end
+  object Button5: TButton
+    Left = 474
+    Top = 406
+    Width = 103
+    Height = 25
+    Caption = #39023#31034'bitmap_back'
+    TabOrder = 3
+    OnClick = Button5Click
+  end
+  object Button6: TButton
+    Left = 567
+    Top = 366
+    Width = 75
+    Height = 25
+    Caption = #31532#20108#26781#32218
+    TabOrder = 4
+    OnClick = Button6Click
   end
   object Button3: TButton
     Left = 458
     Top = 335
     Width = 95
     Height = 25
-    Caption = 'bmp_back=bmp'
-    TabOrder = 2
-  end
-  object Button4: TButton
-    Left = 474
-    Top = 406
-    Width = 75
-    Height = 25
-    Caption = 'bmp_back'
-    TabOrder = 3
-  end
-  object Button5: TButton
-    Left = 458
-    Top = 366
-    Width = 95
-    Height = 25
-    Caption = 'bmp = bmp_back'
-    TabOrder = 4
-  end
-  object Button6: TButton
-    Left = 552
-    Top = 406
-    Width = 75
-    Height = 25
-    Caption = 'bmp'
+    Caption = #20462#25913#32218#27573
     TabOrder = 5
   end
 end
