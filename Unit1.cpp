@@ -105,9 +105,20 @@ void TForm1::MovePoint(int X,int Y){
 		options = 1;
 		DrawFlag = true;
 	}else{
+		DrawLine(X0,Y0,X1,Y1,X2,Y2); //將最終圖畫上去
+		bmp_back->Assign(bmp);//存圖
+		X0 = X1;
+		Y0 = Y1;
 		PointEnd =true;      //結束控制點狀態
+		X1 = X2 = X;          //終點座標
+		Y1 = Y2 = Y;          //P點等於終點
 		DrawLine(X0,Y0,X1,Y1,X2,Y2);
-		Click_flag = false;
+		DrawPoint(X0,Y0);
+		DrawPoint(X1,Y1);
+		Image1->Picture->Bitmap = bmp;
+		options = 1;
+		DrawFlag = true;
+		PointEnd = false;
     }
 }
 //---------------------------------------------------------------------------
@@ -140,7 +151,7 @@ void __fastcall TForm1::Image1MouseDown(TObject *Sender, TMouseButton Button, TS
 			DrawFlag = true;
 			PointEnd = false;
 		}
-	}else{
+	}else{                  //控制點模式
 		MovePoint(X,Y);
     }
 	Label6->Caption = X0;
@@ -157,7 +168,7 @@ void TForm1::Clear(){
 	bmp->Width = Image1->Width;
 	bmp->Canvas->Brush->Color = clGray;     //填滿的顏色
 	bmp->Canvas->Pen->Color = clBlack;         //邊框的顏色
-	bmp->Canvas->Pen->Width=5;
+	bmp->Canvas->Pen->Width=3;
 	bmp->Canvas->Rectangle( TRect(0, 0,Image1->Width,Image1->Height));
 	Image1->Picture->Bitmap = bmp;
 }
@@ -181,4 +192,18 @@ void __fastcall TForm1::Button2Click(TObject *Sender)
 }
 //---------------------------------------------------------------------------
 
+
+
+void __fastcall TForm1::FormShortCut(TWMKey &Msg, bool &Handled)
+{
+	if(Msg.CharCode ==  27){
+		PointEnd =true;      //結束控制點狀態
+		DrawLine(X0,Y0,X1,Y1,X2,Y2);
+		Click_flag = false;
+		DrawFlag = false;
+		Image1->Picture->Bitmap = bmp;
+
+	}
+}
+//---------------------------------------------------------------------------
 

@@ -13,6 +13,7 @@ object Form1: TForm1
   OldCreateOrder = False
   Position = poDesktopCenter
   OnCreate = FormCreate
+  OnShortCut = FormShortCut
   PixelsPerInch = 96
   TextHeight = 13
   object Image1: TImage

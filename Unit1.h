@@ -39,6 +39,7 @@ __published:	// IDE-managed Components
           int X, int Y);
 	void __fastcall Button1Click(TObject *Sender);
 	void __fastcall Button2Click(TObject *Sender);
+	void __fastcall FormShortCut(TWMKey &Msg, bool &Handled);
 
 
 private:	// User declarations
