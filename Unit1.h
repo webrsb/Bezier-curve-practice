@@ -56,6 +56,7 @@ __published:	// IDE-managed Components
 	TMenuItem *N21;
 	TMenuItem *N22;
 	TPanel *Panel3;
+	TSpeedButton *SpeedButton6;
 	void __fastcall FormCreate(TObject *Sender);
 	void __fastcall Image1MouseMove(TObject *Sender, TShiftState Shift, int X, int Y);
 	void __fastcall Image1MouseUp(TObject *Sender, TMouseButton Button, TShiftState Shift,
@@ -88,6 +89,7 @@ __published:	// IDE-managed Components
 	void __fastcall N21Click(TObject *Sender);
 	void __fastcall N22Click(TObject *Sender);
 	void __fastcall Panel3Click(TObject *Sender);
+	void __fastcall SpeedButton6Click(TObject *Sender);
 
 
 private:	// User declarations
