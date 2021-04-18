@@ -60,6 +60,8 @@ __published:	// IDE-managed Components
 	TSpeedButton *SpeedButton6;
 	TStatusBar *StatusBar1;
 	TMenuItem *N23;
+	TSpeedButton *SpeedButton7;
+	TPanel *Panel4;
 	void __fastcall FormCreate(TObject *Sender);
 	void __fastcall Image1MouseMove(TObject *Sender, TShiftState Shift, int X, int Y);
 	void __fastcall Image1MouseUp(TObject *Sender, TMouseButton Button, TShiftState Shift,
@@ -88,6 +90,8 @@ __published:	// IDE-managed Components
 	void __fastcall N22Click(TObject *Sender);
 	void __fastcall Panel3Click(TObject *Sender);
 	void __fastcall SpeedButton6Click(TObject *Sender);
+	void __fastcall SpeedButton7Click(TObject *Sender);
+	void __fastcall Panel4Click(TObject *Sender);
 
 
 private:	// User declarations
@@ -105,6 +109,11 @@ public:		// User declarations
 	void ShowPoint(int,int);
 	void LinkPoint(int,int);
 	void SaveImage(Graphics::TBitmap *,AnsiString);
+	void GetRGB(Graphics::TBitmap *, int , int , int *, int *, int *);
+	void FloodFill(Graphics::TBitmap *, Graphics::TBitmap *,
+					TColor,int,int);
+	void FloodFill_stack(int,int);
+
 	AnsiString AppPath,PicPath;
 
 	bool DrawFlag,PointEnd,Click_flag,MovePoint_flag,end_draw,key_flag,Revers_flag,Sync_flag;
@@ -114,6 +123,16 @@ public:		// User declarations
 	int p_data[100][8],lines,click_data[2]; //0 第幾條線 1 起點 終點 P點 是否重疊
 	//0 1起點 2 3終點 4 5  p點
 	double len1;     //暫時無用
+
+struct stack_data
+{
+	int width;
+	int height;
+	int cR,cG,cB;
+	int pR,pG,pB;
+	Graphics::TBitmap *Target;
+	TColor f_color;
+}stack_data;
 
 	struct point_data
 	{

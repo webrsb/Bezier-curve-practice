@@ -39,11 +39,15 @@ void __fastcall TForm1::FormCreate(TObject *Sender)
 	bmp      = new Graphics::TBitmap();  //建立一個新的bmp物件
 	bmp_back = new Graphics::TBitmap();
 	bmp_new = new Graphics::TBitmap();
+	bmp->PixelFormat=pf24bit;
+	bmp_back->PixelFormat=pf24bit;
+	bmp_new->PixelFormat=pf24bit;
 	for(int i=0;i<100;i++)
 		for(int j=0;j<8;j++){
 			p_data[i][j] = NULL;
 	}
 	line_data.bg_color = clGray;
+	stack_data.f_color = clRed;
 	Clear();
 	bmp_back->Assign(bmp);        //記錄點陣圖
 	bmp_new->Assign(bmp);
@@ -90,6 +94,8 @@ void __fastcall TForm1::Panel2Click(TObject *Sender)
 		SaveDraw();
 		ShowPoint(0,0);
 	}
+	Image1->Picture->Bitmap = bmp;  //顯示結果
+	Image1->Picture->Bitmap = bmp;  //顯示結果
 }
 //---------------------------------------------------------------------------
 
@@ -667,13 +673,18 @@ void __fastcall TForm1::Image1MouseUp(TObject *Sender, TMouseButton Button, TShi
 {
 	Revers_flag = false;
 	if(Button==mbLeft){
-		DrawFlag = false;
-		if(MovePoint_flag == true){
-			SaveDraw();
-			MovePoint_flag = false;
+		if(PenMode == 0 || PenMode == 1 || PenMode == 2 || PenMode == 3){
+			DrawFlag = false;
+			if(MovePoint_flag == true){
+				SaveDraw();
+				MovePoint_flag = false;
+			}
+			ShowPoint(0,0);
+			Image1->Picture->Bitmap = bmp;
+		}else if(PenMode == 4){
+			bmp_new->Assign(bmp);
+			Image1->Picture->Bitmap = bmp;
 		}
-		ShowPoint(0,0);
-		Image1->Picture->Bitmap = bmp;
 	}
 }
 //---------------------------------------------------------------------------
@@ -717,6 +728,8 @@ void __fastcall TForm1::Image1MouseDown(TObject *Sender, TMouseButton Button, TS
 				ShowPoint(3,lines);
 				Image1->Picture->Bitmap = bmp;
 			}
+		}else if(PenMode == 4){
+		   FloodFill(bmp,bmp,stack_data.f_color,X,Y);
 		}else{                  //控制點模式
 			if(PenMode == 1 || PenMode ==2 || PenMode ==3){
 				SelPoint(X,Y);
@@ -845,7 +858,7 @@ line_data.pen_color = clBlack;
 Panel2->Color =  line_data.pen_color;
 ShowPoint(0,0);
   Image1->Picture->Bitmap = bmp;  //顯示結果
-    Image1->Picture->Bitmap = bmp;  //顯示結果
+	Image1->Picture->Bitmap = bmp;  //顯示結果
 }
 //---------------------------------------------------------------------------
 void __fastcall TForm1::N9Click(TObject *Sender)
@@ -964,5 +977,101 @@ void __fastcall TForm1::N22Click(TObject *Sender)
 }
 
 //---------------------------------------------------------------------------
+void TForm1::GetRGB(Graphics::TBitmap *Bmp, int X, int Y, int *r, int *g, int *b)
+{
+  Byte *ptr;
+  int col;
 
+  col=X*3;
+
+  ptr=(Byte *)Bmp->ScanLine[Y];
+
+  *r=ptr[col+2];
+  *g=ptr[col+1];
+  *b=ptr[col];
+
+
+}
+
+void TForm1::FloodFill_stack(int Inx,int Iny){
+	int cR,cG,cB;
+	int pR,pG,pB;
+	int oR,oG,oB;
+	int width,height;
+	Graphics::TBitmap *Target;
+	Byte *tptr;
+	int col;
+	//在範圍內
+	width = stack_data.width;
+	height = stack_data.height;
+	if(Inx<0 ||Inx>=width || Iny<0 || Iny>=height){
+		return;
+	}
+	col=Inx*3;
+	Target = stack_data.Target;
+	tptr=(Byte *)Target->ScanLine[Iny];
+
+	cR = stack_data.cR;
+	cG = stack_data.cG;
+	cB = stack_data.cB;
+	pR = stack_data.pR;
+	pG = stack_data.pG;
+	pB = stack_data.pB;
+	oR = tptr[col+2];  //暫存RGB
+	oG = tptr[col+1];
+	oB = tptr[col];
+	if(oR != cR || oG != cG || oB != cB){
+		return;
+	}
+	tptr[col+2] = pR;
+	tptr[col+1] = pG;
+	tptr[col]   = pB;
+	FloodFill_stack(Inx,Iny-1);
+	FloodFill_stack(Inx,Iny+1);
+	FloodFill_stack(Inx-1,Iny);
+	FloodFill_stack(Inx+1,Iny);
+}
+void TForm1::FloodFill(Graphics::TBitmap *Source, Graphics::TBitmap *Target,TColor PColor,int Px,int Py)
+{
+  Byte *tptr;
+  int width, height;
+  int R,G,B,Pr,Pg,Pb,col;
+  GetRGB(Source,Px,Py,&R,&G,&B);//得到目前的RGB
+  Pr = GetRValue(PColor);  //將要填的色存起來
+  Pg = GetGValue(PColor);
+  Pb = GetBValue(PColor);
+  if(Pr == R && Pg == G && Pb == B)   //相同顏色不填
+  return;
+  width =Source->Width;
+  height=Source->Height; //避免超出範圍
+  stack_data.width = width;
+  stack_data.height = height;
+  stack_data.Target = Target;
+  stack_data.cR = R;
+  stack_data.cG = G;
+  stack_data.cB = B;
+  stack_data.pR = Pr;
+  stack_data.pG = Pg;
+  stack_data.pB = Pb;
+  FloodFill_stack(Px,Py);
+}
+
+void __fastcall TForm1::SpeedButton7Click(TObject *Sender)
+{
+	PenMode = 4;
+	SpeedButton7->Down = true;
+	EndDraw();
+}
+//---------------------------------------------------------------------------
+
+void __fastcall TForm1::Panel4Click(TObject *Sender)
+{
+	TColor f_color;
+	if(ColorDialog1->Execute()){
+		f_color = ColorDialog1->Color;
+		stack_data.f_color = f_color;
+		Panel4->Color = f_color;
+	}
+}
+//---------------------------------------------------------------------------
 
