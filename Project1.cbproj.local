@@ -1,12 +1,12 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <BorlandProject>
-  <Transactions>
-    <Transaction>2013/02/28 10:59:04.462,=C:\Users\leeci\Documents\RAD Studio\Projects\Project1PCH1.h</Transaction>
-    <Transaction>2013/02/28 10:59:04.515,=C:\Users\leeci\Documents\RAD Studio\Projects\Unit1.cpp</Transaction>
-    <Transaction>2013/02/28 10:59:24.473,D:\Bezier curve\Unit1.cpp=C:\Users\leeci\Documents\RAD Studio\Projects\Unit1.cpp</Transaction>
-    <Transaction>2013/02/28 10:59:24.473,D:\Bezier curve\Unit1.h=C:\Users\leeci\Documents\RAD Studio\Projects\Unit1.h</Transaction>
-    <Transaction>2013/02/28 10:59:24.473,D:\Bezier curve\Unit1.dfm=C:\Users\leeci\Documents\RAD Studio\Projects\Unit1.dfm</Transaction>
-    <Transaction>2013/03/01 11:03:49.194,D:\Bezier curve\Project1PCH1.h=C:\Users\leeci\Documents\RAD Studio\Projects\Project1PCH1.h</Transaction>
-    <Transaction>2013/03/01 11:03:52.833,D:\Bezier curve\Project1.cbproj=C:\Users\leeci\Documents\RAD Studio\Projects\Project1.cbproj</Transaction>
+	<Transactions>
+    <Transaction>2013/02/28 10:59:04.000.462,=C:\Users\leeci\Documents\RAD Studio\Projects\Project1PCH1.h</Transaction>
+    <Transaction>2013/02/28 10:59:04.000.515,=C:\Users\leeci\Documents\RAD Studio\Projects\Unit1.cpp</Transaction>
+    <Transaction>2013/02/28 10:59:24.000.473,D:\Bezier curve\Unit1.cpp=C:\Users\leeci\Documents\RAD Studio\Projects\Unit1.cpp</Transaction>
+    <Transaction>2013/02/28 10:59:24.000.473,D:\Bezier curve\Unit1.h=C:\Users\leeci\Documents\RAD Studio\Projects\Unit1.h</Transaction>
+    <Transaction>2013/02/28 10:59:24.000.473,D:\Bezier curve\Unit1.dfm=C:\Users\leeci\Documents\RAD Studio\Projects\Unit1.dfm</Transaction>
+    <Transaction>2013/03/01 11:03:49.000.194,D:\Bezier curve\Project1PCH1.h=C:\Users\leeci\Documents\RAD Studio\Projects\Project1PCH1.h</Transaction>
+    <Transaction>2013/03/01 11:03:52.000.833,D:\Bezier curve\Project1.cbproj=C:\Users\leeci\Documents\RAD Studio\Projects\Project1.cbproj</Transaction>
   </Transactions>
 </BorlandProject>

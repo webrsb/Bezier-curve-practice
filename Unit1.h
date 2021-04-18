@@ -70,6 +70,7 @@ public:		// User declarations
 	void SaveDraw();
 	void EndDraw();
 	void ShowPoint();
+	void LinkPoint(int,int);
 
 	struct point_data
 	{
