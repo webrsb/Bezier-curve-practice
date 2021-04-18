@@ -27,6 +27,13 @@ __published:	// IDE-managed Components
 	TMenuItem *N10;
 	TMenuItem *N11;
 	TMenuItem *N12;
+	TMenuItem *N13;
+	TMenuItem *N14;
+	TButton *Button2;
+	TButton *Button3;
+	TLabel *Label1;
+	TLabel *Label2;
+	TButton *Button1;
 	void __fastcall FormCreate(TObject *Sender);
 	void __fastcall Image1MouseMove(TObject *Sender, TShiftState Shift, int X, int Y);
 	void __fastcall Image1MouseUp(TObject *Sender, TMouseButton Button, TShiftState Shift,
@@ -36,8 +43,6 @@ __published:	// IDE-managed Components
 	void __fastcall Button2Click(TObject *Sender);
 	void __fastcall FormShortCut(TWMKey &Msg, bool &Handled);
 	void __fastcall Button4Click(TObject *Sender);
-	void __fastcall Button6Click(TObject *Sender);
-	void __fastcall Button5Click(TObject *Sender);
 	void __fastcall N2Click(TObject *Sender);
 	void __fastcall N3Click(TObject *Sender);
 	void __fastcall N4Click(TObject *Sender);
@@ -47,6 +52,9 @@ __published:	// IDE-managed Components
 	void __fastcall N9Click(TObject *Sender);
 	void __fastcall N10Click(TObject *Sender);
 	void __fastcall N12Click(TObject *Sender);
+	void __fastcall N14Click(TObject *Sender);
+	void __fastcall Button3Click(TObject *Sender);
+	void __fastcall Button1Click(TObject *Sender);
 
 
 private:	// User declarations
@@ -57,10 +65,11 @@ public:		// User declarations
 	void DrawPoint(int,int);
 	void DrawLine(int);
 	void DrawLine_double(int,int);
-	void MovePoint(int,int);
+	void SelPoint(int,int);
 	void ReDraw(int,int);
 	void SaveDraw();
 	void EndDraw();
+	void ShowPoint();
 
 	struct point_data
 	{

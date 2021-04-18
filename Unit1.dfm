@@ -27,9 +27,61 @@ object Form1: TForm1
     OnMouseDown = Image1MouseDown
     OnMouseMove = Image1MouseMove
     OnMouseUp = Image1MouseUp
-    ExplicitLeft = 8
-    ExplicitWidth = 635
-    ExplicitHeight = 439
+    ExplicitLeft = 48
+    ExplicitTop = -8
+  end
+  object Label1: TLabel
+    Left = 192
+    Top = 406
+    Width = 70
+    Height = 19
+    Caption = 'PenMode:'
+    Font.Charset = ANSI_CHARSET
+    Font.Color = clWindowText
+    Font.Height = -15
+    Font.Name = #24494#36575#27491#40657#39636
+    Font.Style = []
+    ParentFont = False
+  end
+  object Label2: TLabel
+    Left = 280
+    Top = 406
+    Width = 9
+    Height = 19
+    Caption = '1'
+    Font.Charset = ANSI_CHARSET
+    Font.Color = clWindowText
+    Font.Height = -15
+    Font.Name = #24494#36575#27491#40657#39636
+    Font.Style = []
+    ParentFont = False
+  end
+  object Button2: TButton
+    Left = 472
+    Top = 400
+    Width = 75
+    Height = 25
+    Caption = #31227#21205#31680#40670
+    TabOrder = 0
+    OnClick = Button2Click
+  end
+  object Button3: TButton
+    Left = 553
+    Top = 400
+    Width = 75
+    Height = 25
+    Caption = #21034#38500#31680#40670
+    TabOrder = 1
+    OnClick = Button3Click
+  end
+  object Button1: TButton
+    Left = 391
+    Top = 400
+    Width = 75
+    Height = 25
+    Caption = #27298#31034#27169#24335
+    TabOrder = 2
+    OnClick = Button1Click
   end
   object MainMenu1: TMainMenu
     AutoHotkeys = maManual
@@ -50,6 +102,14 @@ object Form1: TForm1
       object N12: TMenuItem
         Caption = #38626#38283
         OnClick = N12Click
+      end
+    end
+    object N13: TMenuItem
+      Caption = #32232#36655
+      object N14: TMenuItem
+        Caption = #21034#38500#19978#19968#26781#32218
+        Enabled = False
+        OnClick = N14Click
       end
     end
     object N1: TMenuItem
