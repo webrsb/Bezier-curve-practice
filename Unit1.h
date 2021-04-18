@@ -38,6 +38,7 @@ __published:	// IDE-managed Components
 	void __fastcall Image1MouseDown(TObject *Sender, TMouseButton Button, TShiftState Shift,
           int X, int Y);
 	void __fastcall Button1Click(TObject *Sender);
+	void __fastcall Button2Click(TObject *Sender);
 
 
 private:	// User declarations
@@ -46,7 +47,7 @@ public:		// User declarations
 	void TForm1::Clear();
 	Graphics::TBitmap *bmp,*bmp_back;     //建立一個新的bitmap
 	void DrawPoint(int,int);
-	void DrawLine(int,int,int,int);
+	void DrawLine(int,int,int,int,int,int);
 	void MovePoint(int,int);
 
 	struct point_data

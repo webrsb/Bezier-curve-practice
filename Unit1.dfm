@@ -3,7 +3,7 @@ object Form1: TForm1
   Top = 0
   Caption = 'Form1'
   ClientHeight = 439
-  ClientWidth = 635
+  ClientWidth = 650
   Color = clBtnFace
   Font.Charset = DEFAULT_CHARSET
   Font.Color = clWindowText
@@ -18,13 +18,14 @@ object Form1: TForm1
   object Image1: TImage
     Left = 0
     Top = 0
-    Width = 635
+    Width = 650
     Height = 439
     Align = alClient
     OnMouseDown = Image1MouseDown
     OnMouseMove = Image1MouseMove
     OnMouseUp = Image1MouseUp
     ExplicitLeft = 8
+    ExplicitWidth = 635
   end
   object Label1: TLabel
     Left = 16
@@ -198,6 +199,7 @@ object Form1: TForm1
     Height = 25
     Caption = #30059#32218
     TabOrder = 1
+    OnClick = Button2Click
   end
   object Button3: TButton
     Left = 458
