@@ -1505,11 +1505,11 @@ object Form3: TForm3
     Stretch = True
   end
   object Label16: TLabel
-    Left = 125
+    Left = 111
     Top = 8
-    Width = 64
+    Width = 106
     Height = 20
-    Caption = #35997#33586#26354#32218
+    Caption = #35997#33586#26354#32218'('#19977#27425')'
     Font.Charset = ANSI_CHARSET
     Font.Color = clWindowText
     Font.Height = -16
@@ -1518,11 +1518,11 @@ object Form3: TForm3
     ParentFont = False
   end
   object Label1: TLabel
-    Left = 214
+    Left = 223
     Top = 8
     Width = 35
     Height = 20
-    Caption = '1.0.1'
+    Caption = '1.1.0'
     Font.Charset = ANSI_CHARSET
     Font.Color = clWindowText
     Font.Height = -16
@@ -1531,7 +1531,7 @@ object Form3: TForm3
     ParentFont = False
   end
   object Label2: TLabel
-    Left = 125
+    Left = 111
     Top = 34
     Width = 124
     Height = 20
