@@ -1,15 +1,17 @@
 object Form1: TForm1
   Left = 0
   Top = 0
-  Caption = 'Form1'
-  ClientHeight = 439
-  ClientWidth = 650
-  Color = clBtnFace
+  BorderStyle = bsSingle
+  Caption = #35997#33586#26354#32218
+  ClientHeight = 449
+  ClientWidth = 660
+  Color = clCream
   Font.Charset = DEFAULT_CHARSET
   Font.Color = clWindowText
   Font.Height = -11
   Font.Name = 'Tahoma'
   Font.Style = []
+  Menu = MainMenu1
   OldCreateOrder = False
   Position = poDesktopCenter
   OnCreate = FormCreate
@@ -19,236 +21,70 @@ object Form1: TForm1
   object Image1: TImage
     Left = 0
     Top = 0
-    Width = 650
-    Height = 439
+    Width = 660
+    Height = 449
     Align = alClient
     OnMouseDown = Image1MouseDown
     OnMouseMove = Image1MouseMove
     OnMouseUp = Image1MouseUp
     ExplicitLeft = 8
     ExplicitWidth = 635
+    ExplicitHeight = 439
   end
-  object Label1: TLabel
-    Left = 16
-    Top = 412
-    Width = 29
-    Height = 19
-    Caption = 'Left:'
-    Font.Charset = ANSI_CHARSET
-    Font.Color = clWindowText
-    Font.Height = -15
-    Font.Name = #24494#36575#27491#40657#39636
-    Font.Style = []
-    ParentFont = False
-  end
-  object Label2: TLabel
-    Left = 51
-    Top = 412
-    Width = 9
-    Height = 19
-    Caption = '0'
-    Font.Charset = ANSI_CHARSET
-    Font.Color = clWindowText
-    Font.Height = -15
-    Font.Name = #24494#36575#27491#40657#39636
-    Font.Style = []
-    ParentFont = False
-  end
-  object Label3: TLabel
-    Left = 142
-    Top = 412
-    Width = 29
-    Height = 19
-    Caption = 'Top:'
-    Font.Charset = ANSI_CHARSET
-    Font.Color = clWindowText
-    Font.Height = -15
-    Font.Name = #24494#36575#27491#40657#39636
-    Font.Style = []
-    ParentFont = False
-  end
-  object Label4: TLabel
-    Left = 177
-    Top = 412
-    Width = 9
-    Height = 19
-    Caption = '0'
-    Font.Charset = ANSI_CHARSET
-    Font.Color = clWindowText
-    Font.Height = -15
-    Font.Name = #24494#36575#27491#40657#39636
-    Font.Style = []
-    ParentFont = False
-  end
-  object Label5: TLabel
-    Left = 16
-    Top = 387
-    Width = 22
-    Height = 19
-    Caption = 'X0:'
-    Font.Charset = ANSI_CHARSET
-    Font.Color = clWindowText
-    Font.Height = -15
-    Font.Name = #24494#36575#27491#40657#39636
-    Font.Style = []
-    ParentFont = False
-  end
-  object Label6: TLabel
-    Left = 44
-    Top = 387
-    Width = 9
-    Height = 19
-    Caption = '0'
-    Font.Charset = ANSI_CHARSET
-    Font.Color = clWindowText
-    Font.Height = -15
-    Font.Name = #24494#36575#27491#40657#39636
-    Font.Style = []
-    ParentFont = False
-  end
-  object Label7: TLabel
-    Left = 142
-    Top = 387
-    Width = 21
-    Height = 19
-    Caption = 'Y0:'
-    Font.Charset = ANSI_CHARSET
-    Font.Color = clWindowText
-    Font.Height = -15
-    Font.Name = #24494#36575#27491#40657#39636
-    Font.Style = []
-    ParentFont = False
-  end
-  object Label8: TLabel
-    Left = 169
-    Top = 387
-    Width = 9
-    Height = 19
-    Caption = '0'
-    Font.Charset = ANSI_CHARSET
-    Font.Color = clWindowText
-    Font.Height = -15
-    Font.Name = #24494#36575#27491#40657#39636
-    Font.Style = []
-    ParentFont = False
-  end
-  object Label9: TLabel
-    Left = 16
-    Top = 362
-    Width = 9
-    Height = 19
-    Caption = '0'
-    Font.Charset = ANSI_CHARSET
-    Font.Color = clWindowText
-    Font.Height = -15
-    Font.Name = #24494#36575#27491#40657#39636
-    Font.Style = []
-    ParentFont = False
-  end
-  object Label10: TLabel
-    Left = 67
-    Top = 362
-    Width = 9
-    Height = 19
-    Caption = '0'
-    Font.Charset = ANSI_CHARSET
-    Font.Color = clWindowText
-    Font.Height = -15
-    Font.Name = #24494#36575#27491#40657#39636
-    Font.Style = []
-    ParentFont = False
-  end
-  object Label11: TLabel
-    Left = 122
-    Top = 362
-    Width = 9
-    Height = 19
-    Caption = '0'
-    Font.Charset = ANSI_CHARSET
-    Font.Color = clWindowText
-    Font.Height = -15
-    Font.Name = #24494#36575#27491#40657#39636
-    Font.Style = []
-    ParentFont = False
-  end
-  object Label12: TLabel
-    Left = 169
-    Top = 362
-    Width = 9
-    Height = 19
-    Caption = '0'
-    Font.Charset = ANSI_CHARSET
-    Font.Color = clWindowText
-    Font.Height = -15
-    Font.Name = #24494#36575#27491#40657#39636
-    Font.Style = []
-    ParentFont = False
-  end
-  object Label13: TLabel
-    Left = 225
-    Top = 362
-    Width = 9
-    Height = 19
-    Caption = '0'
-    Font.Charset = ANSI_CHARSET
-    Font.Color = clWindowText
-    Font.Height = -15
-    Font.Name = #24494#36575#27491#40657#39636
-    Font.Style = []
-    ParentFont = False
-  end
-  object Button1: TButton
-    Left = 393
-    Top = 375
-    Width = 75
-    Height = 25
-    Caption = #28165#38500#30059#24067
-    TabOrder = 0
-    OnClick = Button1Click
-  end
-  object Button2: TButton
-    Left = 393
-    Top = 406
-    Width = 75
-    Height = 25
-    Caption = #39023#31034'bitmap'
-    TabOrder = 1
-    OnClick = Button2Click
-  end
-  object Button4: TButton
-    Left = 575
-    Top = 375
-    Width = 75
-    Height = 25
-    Caption = #35264#30475
-    TabOrder = 2
-    OnClick = Button4Click
-  end
-  object Button5: TButton
-    Left = 474
-    Top = 406
-    Width = 103
-    Height = 25
-    Caption = #39023#31034'bitmap_back'
-    TabOrder = 3
-    OnClick = Button5Click
-  end
-  object Button6: TButton
-    Left = 583
-    Top = 406
-    Width = 75
-    Height = 25
-    Caption = #39023#31034'bitmap_new'
-    TabOrder = 4
-    OnClick = Button6Click
-  end
-  object Button3: TButton
-    Left = 474
-    Top = 375
-    Width = 95
-    Height = 25
-    Caption = #23436#25104#32362#22294
-    TabOrder = 5
-    OnClick = Button3Click
+  object MainMenu1: TMainMenu
+    AutoHotkeys = maManual
+    Left = 184
+    Top = 72
+    object N11: TMenuItem
+      Caption = #27284#26696
+      object N2: TMenuItem
+        AutoHotkeys = maManual
+        Caption = #38283#26032#27284#26696
+        OnClick = N2Click
+      end
+      object N3: TMenuItem
+        AutoHotkeys = maManual
+        Caption = #23436#25104#32362#22294
+        OnClick = N3Click
+      end
+      object N12: TMenuItem
+        Caption = #38626#38283
+        OnClick = N12Click
+      end
+    end
+    object N1: TMenuItem
+      AutoHotkeys = maManual
+      Caption = #37628#31558#31895#32048
+      Enabled = False
+      object N4: TMenuItem
+        Caption = #31895
+        OnClick = N4Click
+      end
+      object N5: TMenuItem
+        Caption = #20013#31561
+        OnClick = N5Click
+      end
+      object N6: TMenuItem
+        Caption = #32048
+        OnClick = N6Click
+      end
+    end
+    object N7: TMenuItem
+      AutoHotkeys = maManual
+      Caption = #37628#31558#38991#33394
+      Enabled = False
+      object N8: TMenuItem
+        Caption = #40657#33394
+        OnClick = N8Click
+      end
+      object N9: TMenuItem
+        Caption = #32005#33394
+        OnClick = N9Click
+      end
+      object N10: TMenuItem
+        Caption = #34253#33394
+        OnClick = N10Click
+      end
+    end
   end
 end

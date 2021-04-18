@@ -8,7 +8,7 @@
 #pragma package(smart_init)
 #pragma resource "*.dfm"
 TForm1 *Form1;
-bool DrawFlag,PointEnd,Click_flag,MovePoint_flag;
+bool DrawFlag,PointEnd,Click_flag,MovePoint_flag,end_draw;
 unsigned int options;
 //0起點 1終點 2 P點
 int p_data[100][6],lines,click_data[2]; //0 第幾條線 1 起點 終點 P點 是否重疊
@@ -26,6 +26,7 @@ void __fastcall TForm1::FormCreate(TObject *Sender)
 	PointEnd = true;    //是否已結束移動控制點
 	Click_flag = false;
 	MovePoint_flag = false; //移動控制點模式
+	end_draw = false;//停止新圖模式
 	lines = 0;
 	bmp      = new Graphics::TBitmap();  //建立一個新的bmp物件
 	bmp_back = new Graphics::TBitmap();
@@ -44,14 +45,15 @@ void __fastcall TForm1::FormCreate(TObject *Sender)
 	data.pen_color   = clBlack;
 	data.pen_size   = 1;
 
+	line_data.pen_color = clBlack;
+	line_data.pen_size = 3;
+	line_data.bg_color = clGray;
 }
 //---------------------------------------------------------------------------
 void __fastcall TForm1::Image1MouseMove(TObject *Sender, TShiftState Shift, int X,
 		  int Y)
 {
 	if(DrawFlag == true){
-		Label2->Caption = X;
-		Label4->Caption = Y;
 		if(options == 0){
 			p_data[lines][2] = X;
 			p_data[lines][3] = Y;
@@ -78,8 +80,7 @@ void __fastcall TForm1::Image1MouseMove(TObject *Sender, TShiftState Shift, int 
 			p_data[click_data[0]+1][0] = X;
 			p_data[click_data[0]+1][1] = Y;
 			bmp->Assign(bmp_back);
-			//ShowMessage("123");
-			DrawLine_double(click_data[0]);
+			DrawLine_double(click_data[0],click_data[0]+1);
 			for (int i = 0; i < 2; i++)
 				for(int j=0;j<6;j+=2)
 				DrawPoint(click_data[0]+i,j);
@@ -110,6 +111,17 @@ void __fastcall TForm1::Image1MouseMove(TObject *Sender, TShiftState Shift, int 
 			for(int i=0;i<6;i+=2)
 			DrawPoint(click_data[0],i);
 			Image1->Picture->Bitmap = bmp;
+		}else if(click_data[1] == 4){
+			p_data[click_data[0]][2] = X;
+			p_data[click_data[0]][3] = Y;
+			p_data[1][0] = X;
+			p_data[1][1] = Y;
+			bmp->Assign(bmp_back);
+			DrawLine_double(click_data[0],1);
+			for (int i = 0; i < 2; i++)
+				for(int j=0;j<6;j+=2)
+				DrawPoint(click_data[0]+i,j);
+			Image1->Picture->Bitmap = bmp;
 		}
 
 	}
@@ -117,17 +129,21 @@ void __fastcall TForm1::Image1MouseMove(TObject *Sender, TShiftState Shift, int 
 }
 //---------------------------------------------------------------------------
 void TForm1::EndDraw(){
-if(lines != 0){
+if(!(lines == 0 || PointEnd == true)){
 	SaveDraw();
+	bmp_new->Assign(bmp);
 	Image1->Picture->Bitmap = bmp;
 	lines = 0;
 	PointEnd =true;      //結束控制點狀態
 	Click_flag = false;
- 	DrawFlag = false;
+	DrawFlag = false;
+	end_draw = false;
 	for(int i=0;i<100;i++)
 		for(int j=0;j<6;j++){
 			p_data[i][j] = NULL;
 	}
+	N1->Enabled = false;
+	N7->Enabled = false;
 }
 }
 //---------------------------------------------------------------------------
@@ -159,13 +175,17 @@ void TForm1::ReDraw(int line,int mode){
 			DrawLine(i);
 		}
 		bmp_back->Assign(bmp);   //儲檔
+	}else if(mode == 4){          //終點
+		for(int i=2;i<lines;i++){
+			DrawLine(i);
+		}
+		bmp_back->Assign(bmp);   //儲檔
 	}
-	//ShowMessage("12");
 }
 //---------------------------------------------------------------------------
 void TForm1::SaveDraw(){
 	bmp->Assign(bmp_new);//清空
-	for(int i=0;i<=lines;i++)
+	for(int i=1;i<=lines;i++)
 	{
 		DrawLine(i);
 	}
@@ -177,11 +197,11 @@ void TForm1::DrawPoint(int line,int i){
 	if(p_data[line][i] == NULL || p_data[line][i+1] == NULL)
 	return;
 	float small_pen = data.pen_size/2;
-	bmp->Canvas->Brush->Color = data.brush_color;     //填滿的顏色
+	bmp->Canvas->Brush->Color = data.brush_color;
 	if (i==4) {
-		bmp->Canvas->Brush->Color = clBlack;
-		bmp->Canvas->Pen->Style = psDash ; //psDot ;
-		bmp->Canvas->Pen->Width = 1 ;
+		bmp->Canvas->Pen->Style = psDot ; //psDot ;
+		bmp->Canvas->Brush->Color = clWhite;
+		bmp->Canvas->Pen->Color = clGray;
 		bmp->Canvas->MoveTo(p_data[line][i],p_data[line][i+1]) ;       //起點
 		bmp->Canvas->LineTo(p_data[line][i-2],p_data[line][i-1]) ;
 		bmp->Canvas->Brush->Color = clRed;
@@ -195,42 +215,42 @@ void TForm1::DrawPoint(int line,int i){
 }
 //---------------------------------------------------------------------------
 
-void TForm1::DrawLine_double(int line){
+void TForm1::DrawLine_double(int line_1,int line_2){
 	//bmp->Assign(bmp_back);
-	bmp->Canvas->Pen->Width=2;
-	bmp->Canvas->Brush->Color =clBlack;
+	bmp->Canvas->Pen->Width=line_data.pen_size;
+	bmp->Canvas->Pen->Color =line_data.pen_color;
 	float B_x_1,B_y_1,P1_x_1,P1_y_1,B_x_2,B_y_2,P1_x_2,P1_y_2,Bx_1,By_1,Bx_2,By_2,range;
-	P1_x_1 = p_data[line][2] - (p_data[line][4] - p_data[line][2]);
-	P1_y_1 = p_data[line][3] - (p_data[line][5] - p_data[line][3]);
-	P1_x_2 = p_data[line+1][2] - (p_data[line+1][4] - p_data[line+1][2]);
-	P1_y_2 = p_data[line+1][3] - (p_data[line+1][5] - p_data[line+1][3]);
+	P1_x_1 = p_data[line_1][2] - (p_data[line_1][4] - p_data[line_1][2]);
+	P1_y_1 = p_data[line_1][3] - (p_data[line_1][5] - p_data[line_1][3]);
+	P1_x_2 = p_data[line_2][2] - (p_data[line_2][4] - p_data[line_2][2]);
+	P1_y_2 = p_data[line_2][3] - (p_data[line_2][5] - p_data[line_2][3]);
 
-	Bx_1 = ((1-0) * (1-0)) * p_data[line][0] + (2*0)*(1-0) * P1_x_1 + 0*0*p_data[line][2];
-	By_1 = ((1-0) * (1-0)) * p_data[line][1] + (2*0)*(1-0) * P1_y_1 + 0*0*p_data[line][3];
-	Bx_2 = ((1-0) * (1-0)) * p_data[line+1][0] + (2*0)*(1-0) * P1_x_2 + 0*0*p_data[line+1][2];
-	By_2 = ((1-0) * (1-0)) * p_data[line+1][1] + (2*0)*(1-0) * P1_y_2 + 0*0*p_data[line+1][3];
+	Bx_1 = ((1-0) * (1-0)) * p_data[line_1][0] + (2*0)*(1-0) * P1_x_1 + 0*0*p_data[line_1][2];
+	By_1 = ((1-0) * (1-0)) * p_data[line_1][1] + (2*0)*(1-0) * P1_y_1 + 0*0*p_data[line_1][3];
+	Bx_2 = ((1-0) * (1-0)) * p_data[line_2][0] + (2*0)*(1-0) * P1_x_2 + 0*0*p_data[line_2][2];
+	By_2 = ((1-0) * (1-0)) * p_data[line_2][1] + (2*0)*(1-0) * P1_y_2 + 0*0*p_data[line_2][3];
 	range = 0.01;
 	for(float t=range;t<=1;t+=range){
-		B_x_1 = ((1-t) * (1-t)) * p_data[line][0] + (2*t)*(1-t) * P1_x_1 + t*t*p_data[line][2];
-		B_y_1 = ((1-t) * (1-t)) * p_data[line][1] + (2*t)*(1-t) * P1_y_1 + t*t*p_data[line][3];
-		B_x_2 = ((1-t) * (1-t)) * p_data[line+1][0] + (2*t)*(1-t) * P1_x_2 + t*t*p_data[line+1][2];
-		B_y_2 = ((1-t) * (1-t)) * p_data[line+1][1] + (2*t)*(1-t) * P1_y_2 + t*t*p_data[line+1][3];
+		B_x_1 = ((1-t) * (1-t)) * p_data[line_1][0] + (2*t)*(1-t) * P1_x_1 + t*t*p_data[line_1][2];
+		B_y_1 = ((1-t) * (1-t)) * p_data[line_1][1] + (2*t)*(1-t) * P1_y_1 + t*t*p_data[line_1][3];
+		B_x_2 = ((1-t) * (1-t)) * p_data[line_2][0] + (2*t)*(1-t) * P1_x_2 + t*t*p_data[line_2][2];
+		B_y_2 = ((1-t) * (1-t)) * p_data[line_2][1] + (2*t)*(1-t) * P1_y_2 + t*t*p_data[line_2][3];
 		bmp->Canvas->MoveTo(Bx_1,By_1) ;       //起點
 		bmp->Canvas->LineTo(B_x_1,B_y_1) ;
 		bmp->Canvas->MoveTo(Bx_2,By_2) ;       //起點
 		bmp->Canvas->LineTo(B_x_2,B_y_2) ;         //目前的點
-		B_x_1 = Bx_1;
-		B_y_1 = By_1;
-		B_x_2 = Bx_2;
-		B_y_2 = By_2;
+		Bx_1 = B_x_1;
+		By_1 = B_y_1;
+		Bx_2 = B_x_2;
+		By_2 = B_y_2;
 
 	}
 }
 //---------------------------------------------------------------------------
 
 void TForm1::DrawLine(int line){
-	bmp->Canvas->Pen->Width=2;
-	bmp->Canvas->Brush->Color =clBlack;
+	bmp->Canvas->Pen->Width=line_data.pen_size;
+	bmp->Canvas->Pen->Color =line_data.pen_color;
 	//bmp->Assign(bmp_back);
 	float B_x,B_y,P1_x,P1_y,B_x_2,B_y_2,range;
 	P1_x = p_data[line][2] - (p_data[line][4] - p_data[line][2]);
@@ -250,14 +270,35 @@ void TForm1::DrawLine(int line){
 //---------------------------------------------------------------------------
 
 void TForm1::MovePoint(int X,int Y){
+	if(lines >= 99){
+		ShowMessage("你畫的線太多了，請先完成目前的繪圖");
+		return;
+	}
 	float small_pen = data.pen_size/2;
 	if(X >= p_data[1][0] - data.width - small_pen && Y >= p_data[1][1] - data.height - small_pen && X <= p_data[1][0]+data.width-small_pen+1 && Y<= p_data[1][1]+data.height-small_pen+1){
-		   //0 第幾條線 1點的狀態 (0重疊線 1 P點 ,2起點3終點 )
-			click_data[0] = 1;
-			click_data[1] = 2;
-			ReDraw(1,2);
+		   //0 第幾條線 1點的狀態 (0重疊線 1 P點 ,2起點3終點 4起點和終點)
+		if(end_draw == false){
+		SaveDraw();
+		lines ++ ;
+		p_data[lines][0] = p_data[lines-1][2];
+		p_data[lines][1] = p_data[lines-1][3];
+		p_data[lines][2] = p_data[lines][4] = p_data[1][0];          //終點座標
+		p_data[lines][3] = p_data[lines][5] = p_data[1][1];          //P點等於終點
+		DrawLine(lines);
+		for(int i=0;i<6;i+=2)
+		DrawPoint(lines,i);
+		Image1->Picture->Bitmap = bmp;
+		DrawFlag = true;
+		PointEnd = false;
+		end_draw = true;
+		}else{
+			click_data[0] = lines;
+			click_data[1] = 4;
+			ReDraw(lines,4);
 			MovePoint_flag = true;
-			return;
+
+        }
+		return;
 	}else if(X >= p_data[lines][2] - data.width - small_pen && Y >= p_data[lines][3] - data.height - small_pen && X <= p_data[lines][2]+data.width-small_pen+1 && Y<= p_data[lines][3]+data.height-small_pen+1){
 			click_data[0] = lines;
 			click_data[1] = 3;
@@ -284,6 +325,7 @@ void TForm1::MovePoint(int X,int Y){
 			}
 		}
 	}
+	if(end_draw == false){
 		SaveDraw();
 		lines ++ ;
 		p_data[lines][0] = p_data[lines-1][2];
@@ -298,6 +340,7 @@ void TForm1::MovePoint(int X,int Y){
 		options = 1;
 		DrawFlag = true;
 		PointEnd = false;
+    }
 }
 //---------------------------------------------------------------------------
 void __fastcall TForm1::Image1MouseUp(TObject *Sender, TMouseButton Button, TShiftState Shift,
@@ -308,7 +351,7 @@ void __fastcall TForm1::Image1MouseUp(TObject *Sender, TMouseButton Button, TShi
 			SaveDraw();
 			MovePoint_flag = false;
 		}
-		for(int i=0;i<=lines;i++)
+		for(int i=1;i<=lines;i++)
 		for(int j=0;j<6;j+=2)
 		DrawPoint(i,j);
 		Image1->Picture->Bitmap = bmp;
@@ -330,6 +373,8 @@ void __fastcall TForm1::Image1MouseDown(TObject *Sender, TMouseButton Button, TS
 			Image1->Picture->Bitmap = bmp;  //顯示結果
 			Click_flag = true; //已設置起點
 		}else{             //第二次按下
+		N1->Enabled = true;
+			N7->Enabled = true;
 			p_data[lines][2] = X ;
 			p_data[lines][3] = Y ;
 			p_data[lines][4] = X ;
@@ -348,16 +393,10 @@ void __fastcall TForm1::Image1MouseDown(TObject *Sender, TMouseButton Button, TS
 	}else{                  //控制點模式
 		MovePoint(X,Y);
 	}
-	Label6->Caption = p_data[lines][0];
-	Label8->Caption = p_data[lines][1];
-}
-//---------------------------------------------------------------------------
-void __fastcall TForm1::Button1Click(TObject *Sender)
-{
-	Clear();
 }
 //---------------------------------------------------------------------------
 void TForm1::Clear(){
+	EndDraw();
 	bmp->Height= Image1->Height;
 	bmp->Width = Image1->Width;
 	bmp->Canvas->Brush->Color = clGray;     //填滿的顏色
@@ -375,12 +414,7 @@ void __fastcall TForm1::Button2Click(TObject *Sender)
 void __fastcall TForm1::FormShortCut(TWMKey &Msg, bool &Handled)
 {
 	if(Msg.CharCode ==  27){
-		PointEnd =true;      //結束控制點狀態
-		SaveDraw();
-		Image1->Picture->Bitmap = bmp;
-		lines = 0;
-		Click_flag = false;
-		DrawFlag = false;
+		EndDraw();
 	}
 }
 //---------------------------------------------------------------------------
@@ -403,9 +437,103 @@ void __fastcall TForm1::Button5Click(TObject *Sender)
 }
 //---------------------------------------------------------------------------
 
-void __fastcall TForm1::Button3Click(TObject *Sender)
+
+void __fastcall TForm1::N2Click(TObject *Sender)
+{
+   	Clear();
+}
+//---------------------------------------------------------------------------
+
+void __fastcall TForm1::N3Click(TObject *Sender)
 {
 	EndDraw();
 }
 //---------------------------------------------------------------------------
+
+
+
+void __fastcall TForm1::N4Click(TObject *Sender)
+{
+line_data.pen_size = 5;
+SaveDraw();
+		for(int i=1;i<=lines;i++)
+		for(int j=0;j<6;j+=2)
+		DrawPoint(i,j);
+		Image1->Picture->Bitmap = bmp;
+Image1->Picture->Bitmap = bmp;
+}
+//---------------------------------------------------------------------------
+
+void __fastcall TForm1::N5Click(TObject *Sender)
+{
+line_data.pen_size = 3;
+SaveDraw();
+		for(int i=1;i<=lines;i++)
+		for(int j=0;j<6;j+=2)
+		DrawPoint(i,j);
+		Image1->Picture->Bitmap = bmp;
+Image1->Picture->Bitmap = bmp;
+}
+//---------------------------------------------------------------------------
+
+void __fastcall TForm1::N6Click(TObject *Sender)
+{
+line_data.pen_size = 1.5;
+SaveDraw();
+		for(int i=1;i<=lines;i++)
+		for(int j=0;j<6;j+=2)
+		DrawPoint(i,j);
+		Image1->Picture->Bitmap = bmp;
+Image1->Picture->Bitmap = bmp;
+}
+//---------------------------------------------------------------------------
+
+
+void __fastcall TForm1::N8Click(TObject *Sender)
+{
+line_data.pen_color = clBlack;
+SaveDraw();
+		for(int i=1;i<=lines;i++)
+		for(int j=0;j<6;j+=2)
+		DrawPoint(i,j);
+		Image1->Picture->Bitmap = bmp;
+Image1->Picture->Bitmap = bmp;
+}
+//---------------------------------------------------------------------------
+
+void __fastcall TForm1::N9Click(TObject *Sender)
+{
+line_data.pen_color = clRed;
+SaveDraw();
+		for(int i=1;i<=lines;i++)
+		for(int j=0;j<6;j+=2)
+		DrawPoint(i,j);
+		Image1->Picture->Bitmap = bmp;
+Image1->Picture->Bitmap = bmp;
+}
+//---------------------------------------------------------------------------
+
+void __fastcall TForm1::N10Click(TObject *Sender)
+{
+line_data.pen_color = clBlue;
+SaveDraw();
+		for(int i=1;i<=lines;i++)
+		for(int j=0;j<6;j+=2)
+		DrawPoint(i,j);
+		Image1->Picture->Bitmap = bmp;
+Image1->Picture->Bitmap = bmp;
+}
+//---------------------------------------------------------------------------
+
+void __fastcall TForm1::N12Click(TObject *Sender)
+{
+  Close();
+}
+//---------------------------------------------------------------------------
+
+
+
+
+
+
 
