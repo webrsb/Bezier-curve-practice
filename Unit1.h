@@ -104,7 +104,7 @@ public:		// User declarations
 	void ReDraw(int,int);
 	void SaveDraw();
 	void EndDraw();
-	void ShowPoint();
+	void ShowPoint(int,int);
 	void LinkPoint(int,int);
 	void SaveImage(Graphics::TBitmap *,AnsiString);
 	AnsiString AppPath,PicPath;
