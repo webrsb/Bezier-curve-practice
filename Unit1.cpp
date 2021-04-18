@@ -23,6 +23,16 @@ __fastcall TForm1::TForm1(TComponent* Owner)
 //---------------------------------------------------------------------------
 void __fastcall TForm1::FormCreate(TObject *Sender)
 {
+   //存檔專用
+	char buffer[128];
+	AnsiString PicName="111.bmp";
+	bmp=NULL;
+	getcwd(buffer,128);
+	AppPath=buffer;
+	AppPath+="\\";
+	//Label1->Caption=AppPath;
+	PicPath=AppPath;
+
 	DrawFlag = false;   //繪圖模式
 	PointEnd = true;    //是否已結束移動控制點
 	Click_flag = false;
@@ -54,6 +64,22 @@ void __fastcall TForm1::FormCreate(TObject *Sender)
 	line_data.bg_color = clGray;
 }
 //---------------------------------------------------------------------------
+
+void __fastcall TForm1::Save1Click(TObject *Sender)
+{
+EndDraw();
+SaveImage(Image1->Picture->Bitmap,PicPath) ;
+}
+//---------------------------------------------------------------------------
+void TForm1::SaveImage(Graphics::TBitmap *Bmp,AnsiString Path)
+{
+SaveDialog1->InitialDir = Path;
+SaveDialog1->DefaultExt = Path;
+if(SaveDialog1->Execute()){
+Bmp->SaveToFile(SaveDialog1->FileName);
+ShowMessage("存檔成功");
+}
+}
 void __fastcall TForm1::Image1MouseMove(TObject *Sender, TShiftState Shift, int X,
 		  int Y)
 {
@@ -143,9 +169,7 @@ void TForm1::EndDraw(){
 			for(int j=0;j<6;j++){
 			p_data[i][j] = NULL;
 		}
-	N1->Enabled = false;
-	N7->Enabled = false;
-	N14->Enabled = false;
+		N14->Enabled = false;
 	}
 }
 //---------------------------------------------------------------------------
@@ -221,7 +245,6 @@ void TForm1::DrawPoint(int line,int i){
 //---------------------------------------------------------------------------
 
 void TForm1::DrawLine_double(int line_1,int line_2){
-	//bmp->Assign(bmp_back);
 	bmp->Canvas->Pen->Width=line_data.pen_size;
 	bmp->Canvas->Pen->Color =line_data.pen_color;
 	float B_x_1,B_y_1,P1_x_1,P1_y_1,B_x_2,B_y_2,P1_x_2,P1_y_2,Bx_1,By_1,Bx_2,By_2,range;
@@ -260,7 +283,7 @@ void TForm1::DrawLine(int line){
 	P1_y = p_data[line][3] - (p_data[line][5] - p_data[line][3]);
 	B_x = ((1-0) * (1-0)) * p_data[line][0] + (2*0)*(1-0) * P1_x + 0*0*p_data[line][2];
 	B_y = ((1-0) * (1-0)) * p_data[line][1] + (2*0)*(1-0) * P1_y + 0*0*p_data[line][3];
-	range = 0.001;
+	range = 0.01;
 	for(float t=range;t<=1;t+=range){
 		B_x_2 = ((1-t) * (1-t)) * p_data[line][0] + (2*t)*(1-t) * P1_x + t*t*p_data[line][2];
 		B_y_2 = ((1-t) * (1-t)) * p_data[line][1] + (2*t)*(1-t) * P1_y + t*t*p_data[line][3];
@@ -403,14 +426,13 @@ void TForm1::SelPoint(int X,int Y){
 			}
 		}
 	}
-	if(end_draw == false){
-	   LinkPoint(X,Y);
-    }
+	LinkPoint(X,Y);
 }
 //---------------------------------------------------------------------------
 void __fastcall TForm1::Image1MouseUp(TObject *Sender, TMouseButton Button, TShiftState Shift,
 		  int X, int Y)
 {
+	if(Button==mbLeft){
 		DrawFlag = false;
 		if(MovePoint_flag == true){
 			SaveDraw();
@@ -427,8 +449,6 @@ void __fastcall TForm1::Image1MouseUp(TObject *Sender, TMouseButton Button, TShi
 				DrawPoint(1,0);         //顯示控制點
 				for(int j=2;j<6;j++)
 				p_data[1][j] = NULL;
-				N1->Enabled = false;
-				N7->Enabled = false;
 				N14->Enabled = false;
 			}else{
 				bmp->Assign(bmp_new);//清空
@@ -442,39 +462,82 @@ void __fastcall TForm1::Image1MouseUp(TObject *Sender, TMouseButton Button, TShi
 		   SaveDraw();
 		}
 		Image1->Picture->Bitmap = bmp;
+	}
 }
 //---------------------------------------------------------------------------
 void __fastcall TForm1::Image1MouseDown(TObject *Sender, TMouseButton Button, TShiftState Shift,
 		  int X, int Y)
 {
-	if(PointEnd == true){  //畫圖模式
-		if(Click_flag == false){    //所有的開始
-			lines ++ ;
-			p_data[lines][0] = X ;
-			p_data[lines][1] = Y ;
-			p_data[lines][2] = X ;
-			p_data[lines][3] = Y ;
-			bmp_back->Assign(bmp);        //記錄點陣圖
-			bmp_new->Assign(bmp);
-			DrawPoint(lines,0);         //顯示控制點
+	if(Button==mbLeft){
+		if(	PointEnd == true){  //畫圖模式
+			if(Click_flag == false){    //所有的開始
+				lines ++ ;
+				p_data[lines][0] = X ;
+				p_data[lines][1] = Y ;
+				p_data[lines][2] = X ;
+				p_data[lines][3] = Y ;
+				bmp_back->Assign(bmp);        //記錄點陣圖
+				bmp_new->Assign(bmp);
+				DrawPoint(lines,0);         //顯示控制點
+				Image1->Picture->Bitmap = bmp;  //顯示結果
+				Click_flag = true; //已設置起點
+			}else{             //第二次按下
+				float small_pen = data.pen_size/2;
+				if(X >= p_data[1][0] - data.width - small_pen && Y >= p_data[1][1] - data.height - small_pen && X <= p_data[1][0]+data.width-small_pen+1 && Y<= p_data[1][1]+data.height-small_pen+1){
+				   if(PenMode == 2){
+						EndDraw();
+					return;
+			   }
+			}
+				N14->Enabled = true;
+				p_data[lines][2] = X ;
+				p_data[lines][3] = Y ;
+				p_data[lines][4] = X ;
+				p_data[lines][5] = Y ;
+				bmp->Assign(bmp_back);
+				DrawLine(lines);
+				for(int i=0;i<6;i+=2)
+				DrawPoint(lines,i);
+				Image1->Picture->Bitmap = bmp;
+				options = 1;
+				DrawFlag = true;
+				PointEnd = false;
+			}
+		}else{                  //控制點模式
+			if(PenMode == 1 || PenMode ==2){
+				SelPoint(X,Y);
+			}else if(PenMode == 0){
+				LinkPoint(X,Y);
+			}
+		}
+	}else if(Button==mbRight){
+		if(!(lines <= 1 || PointEnd == true)){
+			 lines --;
+			 if(end_draw == true){
+				end_draw = false;
+		 }
+		 ShowPoint();
+		}else if(lines == 1){
+			bmp_back->Assign(bmp_new);        //記錄點陣圖
+			bmp->Assign(bmp_new);
+			DrawPoint(1,0);         //顯示控制點
 			Image1->Picture->Bitmap = bmp;  //顯示結果
 			Click_flag = true; //已設置起點
-		}else{             //第二次按下
-		float small_pen = data.pen_size/2;
-		if(X >= p_data[1][0] - data.width - small_pen && Y >= p_data[1][1] - data.height - small_pen && X <= p_data[1][0]+data.width-small_pen+1 && Y<= p_data[1][1]+data.height-small_pen+1){
-		   if(PenMode == 2){
-				EndDraw();
-				return;
-		   }
-		}
-			N1->Enabled = true;     //開啟選單
-			N7->Enabled = true;
-			N14->Enabled = true;
-			p_data[lines][2] = X ;
-			p_data[lines][3] = Y ;
-			p_data[lines][4] = X ;
-			p_data[lines][5] = Y ;
-			bmp->Assign(bmp_back);
+			PointEnd = true;
+			N14->Enabled = false;
+		 }
+	}
+}
+//---------------------------------------------------------------------------
+void TForm1::LinkPoint(int X,int Y){
+		SaveDraw();
+		if(end_draw == false && lines >=1){
+			lines ++ ;
+			p_data[lines][0] = p_data[lines-1][2];
+			p_data[lines][1] = p_data[lines-1][3];
+			PointEnd =true;      //結束控制點狀態
+			p_data[lines][2] = p_data[lines][4] = X;          //終點座標
+			p_data[lines][3] = p_data[lines][5] = Y;          //P點等於終點
 			DrawLine(lines);
 			for(int i=0;i<6;i+=2)
 			DrawPoint(lines,i);
@@ -483,49 +546,30 @@ void __fastcall TForm1::Image1MouseDown(TObject *Sender, TMouseButton Button, TS
 			DrawFlag = true;
 			PointEnd = false;
 		}
-	}else{                  //控制點模式
-		if(PenMode == 1 || PenMode ==2){
-			SelPoint(X,Y);
-		}else if(PenMode == 0){
-			LinkPoint(X,Y);
-		}
-	}
-}
-//---------------------------------------------------------------------------
-void TForm1::LinkPoint(int X,int Y){
-		SaveDraw();
-		lines ++ ;
-		p_data[lines][0] = p_data[lines-1][2];
-		p_data[lines][1] = p_data[lines-1][3];
-		PointEnd =true;      //結束控制點狀態
-		p_data[lines][2] = p_data[lines][4] = X;          //終點座標
-		p_data[lines][3] = p_data[lines][5] = Y;          //P點等於終點
-		DrawLine(lines);
-		for(int i=0;i<6;i+=2)
-		DrawPoint(lines,i);
-		Image1->Picture->Bitmap = bmp;
-		options = 1;
-		DrawFlag = true;
-		PointEnd = false;
 }
 //---------------------------------------------------------------------------
 void TForm1::ShowPoint(){
-	if(PenMode == 1){
-		SaveDraw();
-		for(int i=1;i<=lines;i++) //顯示P點
-			for(int j=0;j<6;j+=2)
-				DrawPoint(i,j);
-				Image1->Picture->Bitmap = bmp;
-	}else if(PenMode == 2){
-		SaveDraw();
-		for(int i=1;i<=lines;i++) //不顯示P點
-			for(int j=0;j<4;j+=2)
-				DrawPoint(i,j);
-				Image1->Picture->Bitmap = bmp;
-	}else if(PenMode == 0){
-		SaveDraw();
+	if(!(Click_flag == true && PointEnd == true)){
+		if(PenMode == 1){
+			SaveDraw();
+			for(int i=1;i<=lines;i++) //顯示P點
+				for(int j=0;j<6;j+=2)
+					DrawPoint(i,j);
+					Image1->Picture->Bitmap = bmp;
+		}else if(PenMode == 2){
+			SaveDraw();
+			for(int i=1;i<=lines;i++) //不顯示P點
+				for(int j=0;j<4;j+=2)
+					DrawPoint(i,j);
+					Image1->Picture->Bitmap = bmp;
+		}else if(PenMode == 0){
+			SaveDraw();
+			Image1->Picture->Bitmap = bmp;
+		}
+	}else{
+		DrawPoint(1,0);
 		Image1->Picture->Bitmap = bmp;
-	}
+    }
 }
 //---------------------------------------------------------------------------
 void TForm1::Clear(){
@@ -536,31 +580,42 @@ void TForm1::Clear(){
 	bmp->Canvas->Pen->Color = clBlack;         //邊框的顏色
 	bmp->Canvas->Pen->Width=3;
 	bmp->Canvas->Rectangle( TRect(0, 0,Image1->Width,Image1->Height));
+	//bmp->LoadFromFile("mlp.bmp");
+	bmp_back->Assign(bmp);
+	bmp_new->Assign(bmp);
 	Image1->Picture->Bitmap = bmp;
-
+ 
 }
-void __fastcall TForm1::Button2Click(TObject *Sender)
-{
-	PenMode = 1;
-	Label2->Caption = PenMode;
-	ShowPoint();
-}
-
-void __fastcall TForm1::Button3Click(TObject *Sender)
-{
-	PenMode = 2;
-	Label2->Caption = PenMode;
-	ShowPoint();
-}
-//---------------------------------------------------------------------------
 void __fastcall TForm1::FormShortCut(TWMKey &Msg, bool &Handled)
 {
-	if(Msg.CharCode ==  27){
+	if(Msg.CharCode ==  13){
 	 if(key_flag == false){
 		key_flag =true;
 	 }else{
 		key_flag =false;
 		EndDraw();
+	 }
+	}
+	if(Msg.CharCode ==  27){
+	 if(key_flag == false){
+		key_flag =true;
+	 }else{
+		key_flag =false;
+		if(!(lines == 0)){
+		for(int i=0;i<100;i++)
+			for(int j=0;j<6;j++)
+				p_data[i][j] = NULL;
+		SaveDraw();
+		bmp_new->Assign(bmp);
+		Image1->Picture->Bitmap = bmp;
+		lines = 0;
+		PointEnd =true;      //結束控制點狀態
+		Click_flag = false;
+		DrawFlag = false;
+		end_draw = false;
+		N14->Enabled = false;
+		}
+
 	 }
 	}
 }
@@ -636,25 +691,110 @@ if(!(lines <= 1 || PointEnd == true)){
   }
   ShowPoint();
   }else if(lines == 1){
-  //ShowMessage("123");
 			bmp_back->Assign(bmp_new);        //記錄點陣圖
 			bmp->Assign(bmp_new);
 			DrawPoint(1,0);         //顯示控制點
 			Image1->Picture->Bitmap = bmp;  //顯示結果
 			Click_flag = true; //已設置起點
 			PointEnd = true;
-			N1->Enabled = false;
-		N7->Enabled = false;
 		N14->Enabled = false;
   }else{
 	  ShowMessage("無法還原");
   }
 }
 //---------------------------------------------------------------------------
-void __fastcall TForm1::Button1Click(TObject *Sender)
+
+
+ //放棄目前繪圖
+
+void __fastcall TForm1::N15Click(TObject *Sender)
+{
+	if(!(lines == 0)){
+		for(int i=0;i<100;i++)
+			for(int j=0;j<6;j++)
+				p_data[i][j] = NULL;
+		SaveDraw();
+		bmp_new->Assign(bmp);
+		Image1->Picture->Bitmap = bmp;
+		lines = 0;
+		PointEnd =true;      //結束控制點狀態
+		Click_flag = false;
+		DrawFlag = false;
+		end_draw = false;
+		N14->Enabled = false;
+	}
+}
+//---------------------------------------------------------------------------
+
+
+void __fastcall TForm1::N17Click(TObject *Sender)
 {
 	PenMode = 0;
-	Label2->Caption = PenMode;
+	SpeedButton1->Down = true;
 	ShowPoint();
 }
 //---------------------------------------------------------------------------
+
+void __fastcall TForm1::N18Click(TObject *Sender)
+{
+	PenMode = 1;
+	SpeedButton2->Down = true;
+	ShowPoint();
+}
+//---------------------------------------------------------------------------
+
+void __fastcall TForm1::N19Click(TObject *Sender)
+{
+	PenMode = 2;
+	ShowPoint();
+}
+//---------------------------------------------------------------------------
+
+void __fastcall TForm1::SpeedButton1Click(TObject *Sender)
+{
+	PenMode = 0;
+	ShowPoint();
+}
+//---------------------------------------------------------------------------
+
+void __fastcall TForm1::SpeedButton2Click(TObject *Sender)
+{
+	PenMode = 1;
+	ShowPoint();
+}
+//---------------------------------------------------------------------------
+
+void __fastcall TForm1::SpeedButton3Click(TObject *Sender)
+{
+	PenMode = 2;
+	ShowPoint();
+}
+//---------------------------------------------------------------------------
+
+void __fastcall TForm1::SpeedButton4Click(TObject *Sender)
+{
+	EndDraw();
+}
+//---------------------------------------------------------------------------
+
+void __fastcall TForm1::SpeedButton5Click(TObject *Sender)
+{
+	if(!(lines == 0)){
+		for(int i=0;i<100;i++)
+			for(int j=0;j<6;j++)
+				p_data[i][j] = NULL;
+		SaveDraw();
+		bmp_new->Assign(bmp);
+		Image1->Picture->Bitmap = bmp;
+		lines = 0;
+		PointEnd =true;      //結束控制點狀態
+		Click_flag = false;
+		DrawFlag = false;
+		end_draw = false;
+		N14->Enabled = false;
+	}
+}
+//---------------------------------------------------------------------------
+
+
+
