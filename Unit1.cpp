@@ -4,6 +4,8 @@
 #pragma hdrstop
 
 #include "Unit1.h"
+#include "Unit2.h"
+#include "Unit3.h"
 //---------------------------------------------------------------------------
 #pragma package(smart_init)
 #pragma resource "*.dfm"
@@ -48,6 +50,7 @@ void __fastcall TForm1::FormCreate(TObject *Sender)
 		for(int j=0;j<6;j++){
 			p_data[i][j] = NULL;
 	}
+	line_data.bg_color = clGray;
 	Clear();
 	bmp_back->Assign(bmp);        //記錄點陣圖
 	bmp_new->Assign(bmp);
@@ -61,7 +64,9 @@ void __fastcall TForm1::FormCreate(TObject *Sender)
 
 	line_data.pen_color = clBlack;
 	line_data.pen_size = 3;
-	line_data.bg_color = clGray;
+
+	Panel2->Color =  line_data.pen_color;
+	Panel3->Color =  line_data.bg_color;
 }
 //---------------------------------------------------------------------------
 
@@ -73,12 +78,38 @@ SaveImage(Image1->Picture->Bitmap,PicPath) ;
 //---------------------------------------------------------------------------
 void TForm1::SaveImage(Graphics::TBitmap *Bmp,AnsiString Path)
 {
-SaveDialog1->InitialDir = Path;
-SaveDialog1->DefaultExt = Path;
-if(SaveDialog1->Execute()){
-Bmp->SaveToFile(SaveDialog1->FileName);
-ShowMessage("存檔成功");
+	SavePictureDialog1->InitialDir = Path;
+	SavePictureDialog1->DefaultExt = Path;
+	if(SavePictureDialog1->Execute()){
+		Bmp->SaveToFile(SavePictureDialog1->FileName);
+		ShowMessage("存檔成功");
+	}
 }
+//---------------------------------------------------------------------------
+
+void __fastcall TForm1::Panel2Click(TObject *Sender)
+{
+	TColor lineColor;
+	if(ColorDialog1->Execute()){
+		lineColor = ColorDialog1->Color;
+		line_data.pen_color = lineColor;
+		Panel2->Color = lineColor;
+		SaveDraw();
+		ShowPoint();
+	}
+}
+//---------------------------------------------------------------------------
+
+void __fastcall TForm1::Panel3Click(TObject *Sender)
+{
+	TColor bgColor;
+	if(ColorDialog1->Execute()){
+		bgColor = ColorDialog1->Color;
+		line_data.bg_color  = bgColor;
+		Panel3->Color = bgColor;
+		SaveDraw();
+		ShowPoint();
+	}
 }
 void __fastcall TForm1::Image1MouseMove(TObject *Sender, TShiftState Shift, int X,
 		  int Y)
@@ -576,9 +607,9 @@ void TForm1::Clear(){
 	EndDraw();
 	bmp->Height= Image1->Height;
 	bmp->Width = Image1->Width;
-	bmp->Canvas->Brush->Color = clGray;     //填滿的顏色
+	bmp->Canvas->Brush->Color = line_data.bg_color;     //填滿的顏色
 	bmp->Canvas->Pen->Color = clBlack;         //邊框的顏色
-	bmp->Canvas->Pen->Width=3;
+	bmp->Canvas->Pen->Width=0;
 	bmp->Canvas->Rectangle( TRect(0, 0,Image1->Width,Image1->Height));
 	//bmp->LoadFromFile("mlp.bmp");
 	bmp_back->Assign(bmp);
@@ -660,12 +691,14 @@ ShowPoint();
 void __fastcall TForm1::N8Click(TObject *Sender)
 {
 line_data.pen_color = clBlack;
+Panel2->Color =  line_data.pen_color;
 ShowPoint();
 }
 //---------------------------------------------------------------------------
 void __fastcall TForm1::N9Click(TObject *Sender)
 {
 line_data.pen_color = clRed;
+Panel2->Color =  line_data.pen_color;
 SaveDraw();
 ShowPoint();
 }
@@ -673,6 +706,7 @@ ShowPoint();
 void __fastcall TForm1::N10Click(TObject *Sender)
 {
 line_data.pen_color = clBlue;
+Panel2->Color =  line_data.pen_color;
 SaveDraw();
 ShowPoint();
 }
@@ -746,6 +780,7 @@ void __fastcall TForm1::N18Click(TObject *Sender)
 void __fastcall TForm1::N19Click(TObject *Sender)
 {
 	PenMode = 2;
+	SpeedButton3->Down = true;
 	ShowPoint();
 }
 //---------------------------------------------------------------------------
@@ -796,5 +831,16 @@ void __fastcall TForm1::SpeedButton5Click(TObject *Sender)
 }
 //---------------------------------------------------------------------------
 
+void __fastcall TForm1::N21Click(TObject *Sender)
+{
+	Form2->ShowModal();
+}
+//---------------------------------------------------------------------------
 
+void __fastcall TForm1::N22Click(TObject *Sender)
+{
+	Form3->ShowModal();
+}
+
+//---------------------------------------------------------------------------
 

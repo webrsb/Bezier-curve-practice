@@ -14,6 +14,9 @@
 #include <FileCtrl.hpp>
 #include <Vcl.Dialogs.hpp>
 #include <Vcl.Buttons.hpp>
+#include <Vcl.ActnColorMaps.hpp>
+#include <Vcl.ActnMan.hpp>
+#include <Vcl.ExtDlgs.hpp>
 //---------------------------------------------------------------------------
 class TForm1 : public TForm
 {
@@ -35,7 +38,6 @@ __published:	// IDE-managed Components
 	TMenuItem *N13;
 	TMenuItem *N14;
 	TMenuItem *Save1;
-	TSaveDialog *SaveDialog1;
 	TMenuItem *N15;
 	TMenuItem *N16;
 	TMenuItem *N17;
@@ -47,6 +49,13 @@ __published:	// IDE-managed Components
 	TSpeedButton *SpeedButton3;
 	TSpeedButton *SpeedButton4;
 	TSpeedButton *SpeedButton5;
+	TColorDialog *ColorDialog1;
+	TPanel *Panel2;
+	TSavePictureDialog *SavePictureDialog1;
+	TMenuItem *N20;
+	TMenuItem *N21;
+	TMenuItem *N22;
+	TPanel *Panel3;
 	void __fastcall FormCreate(TObject *Sender);
 	void __fastcall Image1MouseMove(TObject *Sender, TShiftState Shift, int X, int Y);
 	void __fastcall Image1MouseUp(TObject *Sender, TMouseButton Button, TShiftState Shift,
@@ -75,6 +84,10 @@ __published:	// IDE-managed Components
 	void __fastcall SpeedButton3Click(TObject *Sender);
 	void __fastcall SpeedButton4Click(TObject *Sender);
 	void __fastcall SpeedButton5Click(TObject *Sender);
+	void __fastcall Panel2Click(TObject *Sender);
+	void __fastcall N21Click(TObject *Sender);
+	void __fastcall N22Click(TObject *Sender);
+	void __fastcall Panel3Click(TObject *Sender);
 
 
 private:	// User declarations

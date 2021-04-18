@@ -23,12 +23,12 @@ object Form1: TForm1
     Top = 0
     Width = 627
     Height = 449
+    Cursor = crArrow
     Align = alClient
     OnMouseDown = Image1MouseDown
     OnMouseMove = Image1MouseMove
     OnMouseUp = Image1MouseUp
-    ExplicitLeft = 48
-    ExplicitWidth = 612
+    ExplicitTop = 8
   end
   object Panel1: TPanel
     Left = 0
@@ -343,11 +343,37 @@ object Form1: TForm1
       Transparent = False
       OnClick = SpeedButton5Click
     end
+    object Panel3: TPanel
+      Left = 2
+      Top = 148
+      Width = 20
+      Height = 20
+      Hint = #30059#24067#38991#33394
+      Color = clBackground
+      ParentBackground = False
+      ParentShowHint = False
+      ShowHint = True
+      TabOrder = 1
+      OnClick = Panel3Click
+    end
+    object Panel2: TPanel
+      Left = 10
+      Top = 156
+      Width = 21
+      Height = 21
+      Hint = #32218#26781#38991#33394
+      Color = clBackground
+      ParentBackground = False
+      ParentShowHint = False
+      ShowHint = True
+      TabOrder = 0
+      OnClick = Panel2Click
+    end
   end
   object MainMenu1: TMainMenu
     AutoHotkeys = maManual
-    Left = 432
-    Top = 216
+    Left = 424
+    Top = 384
     object N11: TMenuItem
       Caption = #27284#26696
       object N2: TMenuItem
@@ -428,11 +454,26 @@ object Form1: TForm1
         OnClick = N19Click
       end
     end
+    object N20: TMenuItem
+      Caption = #35498#26126
+      object N21: TMenuItem
+        Caption = #20351#29992#35498#26126
+        OnClick = N21Click
+      end
+      object N22: TMenuItem
+        Caption = #38364#26044
+        OnClick = N22Click
+      end
+    end
   end
-  object SaveDialog1: TSaveDialog
-    Filter = '.bmp|.bmp'
+  object ColorDialog1: TColorDialog
+    Left = 488
+    Top = 384
+  end
+  object SavePictureDialog1: TSavePictureDialog
+    Filter = 'Bitmaps (*.bmp)|*.bmp'
     Options = [ofOverwritePrompt, ofHideReadOnly, ofNoChangeDir, ofEnableSizing]
-    Left = 352
-    Top = 208
+    Left = 336
+    Top = 384
   end
 end
